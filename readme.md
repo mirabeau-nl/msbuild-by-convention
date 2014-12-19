@@ -7,7 +7,7 @@ By convention every subdirectory under ***Source*** are considered containing.NE
 
 
 *   In the root of your repository create the directory Build\Scripts\
-*   Download the main.msbuild file from the master repo.
+*   Download the [main.msbuild file ](https://raw.githubusercontent.com/mirabeau-nl/msbuild-by-convention/master/main.msbuild) from the master repo.
 *   Your done :-) (running the main msbuild will download the nuget package msbuild-by-convention and install it in msbuild-by-convention in the root folder)
 *	If you like you can use nuget to customize your installation. 
 *	Install-Package msbuild-by-convention
