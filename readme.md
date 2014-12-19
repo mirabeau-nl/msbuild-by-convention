@@ -10,7 +10,7 @@ By convention every subdirectory under ***Source*** are considered containing.NE
 *   Download the main.msbuild file from the master repo.
 *   Your done :-) (running the main msbuild will download the nuget package msbuild-by-convention and install it in msbuild-by-convention in the root folder)
 *	If you like you can use nuget to customize your installation. 
-*	TODO: Nuget install
+*	Install-Package msbuild-by-convention
 
 
 ### Default directory structure of your repository ###
