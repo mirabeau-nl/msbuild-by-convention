@@ -1,0 +1,6 @@
+Bin/
+CodeCoverage/
+CodeAnalysis/
+TestResults/
+Releases/
+.sass-cache

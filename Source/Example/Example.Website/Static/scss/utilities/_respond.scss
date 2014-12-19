@@ -1,0 +1,35 @@
+//
+// http://jakearchibald.github.io/sass-ie/
+//
+$fix-mqs: false !default;
+$old-ie: false !default;
+
+@mixin respond-min($width) {
+    @if $fix-mqs {
+        @if $fix-mqs >= $width and $width < 64em {
+            @content;
+        }
+    } @else {
+        @media screen and (min-width: $width) {
+            @content;
+        }
+    }
+}
+
+@mixin respond-max($width) {
+    @if $fix-mqs {
+        @if $fix-mqs <= $width {
+            @content;
+        }
+    } @else {
+        @media screen and (max-width: $width) {
+            @content;
+        }
+    }
+}
+
+@mixin old-ie {
+    @if $old-ie {
+        @content;
+    }
+}

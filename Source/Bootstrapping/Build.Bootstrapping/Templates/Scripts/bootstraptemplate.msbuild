@@ -1,0 +1,23 @@
+﻿<Project InitialTargets="Bootstrap" DefaultTargets="BuildAndRunUnitTests" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<!-- -->
+  <PropertyGroup>
+    <MsBuildByConventionSpecificVersionToUse></MsBuildByConventionSpecificVersionToUse>
+
+    <BuildScriptPath>..\..\msbuild-by-convention\Scripts\</BuildScriptPath>
+    <TargetsMsbuildFileName>targets.msbuild</TargetsMsbuildFileName>
+  </PropertyGroup>
+
+  <!--###bootstraptaskdefinition###-->
+  
+  <Target Name="Bootstrap">
+    <PropertyGroup>
+      <ErrorCodeFromBootstrap Condition="'$(ErrorCodeFromBootstrap)' == ''">0</ErrorCodeFromBootstrap>
+    </PropertyGroup>    
+    <BootstrapMsBuildByConvention Condition="!exists('$(BuildScriptPath)')" MsBuildByConventionVersion="$(MsBuildByConventionSpecificVersionToUse)" >
+      <Output TaskParameter="ErrorCode" PropertyName="ErrorCodeFromBootstrap"/>
+    </BootstrapMsBuildByConvention>    
+    <Error Code="$(ErrorCodeFromBootstrap)" Text="Error while executing build." Condition="'$(ErrorCodeFromBootstrap)' != '0' "/>    
+  </Target>
+
+  <Import Project="$(BuildScriptPath)$(TargetsMsbuildFileName)" Condition="exists('$(BuildScriptPath)$(TargetsMsbuildFileName)')"/>
+</Project>

@@ -1,0 +1,8 @@
+!|import                   |
+|com.xebia.incubator.xebium|
+
+!|library               |
+|selenium driver fixture|
+
+!|script      |selenium driver fixture               |
+|start browser|${browser}|on url|${baseurl}|
