@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>msbuild-by-convention</id>
+        <version>$version$</version>
+        <title>Build by convention scripts</title>
+        <authors>Dorus Verhoeckx, Sander Kinds, Jeroen Pot</authors>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>msbuild-by-convention is a standard set of buildscripts and tools to build, test and create release packages for your .NET repository, everything is convention based and is aimed at CI and CD. This is a fork of https://github.com/JorritSalverda/msbuild-by-convention for the pipeline and build filosofy read: http://blog.jorritsalverda.com/2012/05/msbuild-by-convention.html</description>
+        <summary />
+    </metadata>
+    <files>
+        <file src="msbuild-by-convention\Scripts\*.*" target="Scripts\" />        		
+		<file src="msbuild-by-convention\Tools\**\*.*" target="Tools\" />			       
+    </files>
+</package>

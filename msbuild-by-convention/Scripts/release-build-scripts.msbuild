@@ -1,0 +1,45 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" DefaultTargets="releasebuildscripts">
+	<Import Project="targets.msbuild"/>
+	<UsingTask AssemblyFile="$(MSBuildCommunityTasksPath)" TaskName="MSBuild.Community.Tasks.Xml.XmlQuery" />
+	
+	<Target Name="releasebuildscripts" DependsOnTargets="Clean;PrepareGlobalProperties">
+		<PropertyGroup>
+			<ProjectName>msbuild-by-convention-$(BuildVersion)</ProjectName>
+			<ProjectReleaseDirectory>$(ReleaseDirectory)$(ProjectName)\</ProjectReleaseDirectory>
+		</PropertyGroup>
+		
+		<!-- Get packagenames from NuGet packages config wich should be excluded -->
+		<XmlQuery 
+					XmlFileName="$(BuildToolsDirectory)packages.config"
+					XPath="//package">
+			<Output TaskParameter="Values" ItemName="Packages"/>
+		</XmlQuery>
+		
+		<ItemGroup>
+			<BuildToolsToExclude Include="$(BuildToolsDirectory)%(Packages.id).%(Packages.version)\**" />
+		</ItemGroup>		
+		
+		<!-- Copy the files to a tmp directory -->
+		<ItemGroup>
+			<FilesToCopy Remove="@(FilesToCopy)" />
+			<FilesToCopy Include="$(BaseDirectory)**\*" 
+			Exclude="$(BuildDirectory)**\release-build-scripts.*;@(BuildToolsToExclude);$(CSharpSourceDirectory)**;$(BaseDirectory)**\.git\**;$(BaseDirectory)*.git*;">
+			</FilesToCopy>
+		</ItemGroup>
+		
+		<Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(ProjectReleaseDirectory)%(FilesToCopy.RecursiveDir)" Condition=" @(FilesToCopy) != '' " />	
+						
+		<!-- zip the release -->
+		
+		<!-- zip release directory and store zip with version number one directory above -->
+		
+		<ItemGroup>			
+			<FilesToZip Remove="@(FilesToZip)" />
+			<FilesToZip Include="$(ProjectReleaseDirectory)">
+			</FilesToZip>
+		</ItemGroup>
+					
+		<Zip Files="@(FilesToZip)" WorkingDirectory="$(ReleaseDirectory)$(RelativeProjectReleaseDirectory)" ZipFileName="$(ReleaseDirectory)\msbuild-by-convention-$(BuildVersion).zip" ZipLevel="9" />
+		
+	</Target>
+</Project>

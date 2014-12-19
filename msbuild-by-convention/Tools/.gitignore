@@ -1,0 +1,8 @@
+OpenCover.*/**
+NUnit.*/**
+Machine.Specifications.*/**
+MSBuildTasks.*/**
+phantomjs.*/**
+ReportGenerator.*/**
+MSBuild.Extension*/**
+Mirabeau.DatabaseReleaseTool*/**

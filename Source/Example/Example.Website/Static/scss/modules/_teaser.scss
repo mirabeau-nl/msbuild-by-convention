@@ -1,0 +1,75 @@
+$color-teaser-bg: #f3f6f7;
+$color-btn-bg: #6cd395;
+$color-btn-text: #fff;
+
+.teaser-block {
+    text-align: center;
+    padding: 20px 0;
+    overflow: hidden;
+    background-color: $color-teaser-bg;
+}
+
+.teaser-items {
+    // @include column(2);
+}
+
+.teaser-item {
+    padding: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 21px;
+    transition: background-color 200ms ease-in-out;
+
+    @include respond-min(520px) {
+        float: left;
+        width: 50%;
+    }
+    @include respond-min(768px) {
+        width: 25%;
+    }
+
+    &:hover,
+    &:focus {
+        background-color: #fff;
+        transition: background-color 200ms ease-in-out;
+
+        .teaser-item-button {
+            visibility: visible;
+        }
+    }
+
+    .teaser-item-image {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .teaser-item-title {
+        margin-bottom: 5px;
+    }
+
+    .teaser-item-text {
+        margin-bottom: 15px;
+    }
+
+    .teaser-item-button {
+        visibility: hidden;
+        display: inline-block;
+        padding: 0 30px;
+        font-size: 18px;
+        line-height: 38px;
+        font-weight: bold;
+        background-color: $color-btn-bg;
+        color: $color-btn-text;
+
+        transition: background-color 100ms;
+
+        &:hover,
+        &:focus {
+            background-color: darken($color-btn-bg, 10%);
+        }
+        &:active {
+            background-color: darken($color-btn-bg, 15%);
+        }
+    }
+}
+

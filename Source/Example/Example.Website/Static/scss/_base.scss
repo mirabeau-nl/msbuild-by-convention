@@ -1,0 +1,83 @@
+// Normalize
+@import 'vendor/normalize';
+
+////
+// Base styles
+////
+
+@import 'base/colours';
+@import 'base/fonts';
+@import 'base/vertical-rhythm';
+
+* {
+  margin: 0;
+  padding: 0;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: $font-main;
+  font-size: 62.5%; // 10px, for base 10 rems.
+  color: $black;
+}
+
+body {
+  @include rem('font-size', 18);
+  @include rem('line-height', $baseline);
+
+  background-color: #fafafa;
+}
+
+// Headings
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $font-headings;
+  line-height: 1.5;
+}
+
+h1, .h-alpha {
+  @include rem('margin-bottom', $baseline);
+  @include rem('font-size', 64);
+  @include rem('line-height', 3 * $baseline);
+  font-weight: bold;
+  color: $turquoise;
+}
+h2, .h-beta {
+  @include rem('font-size', 42);
+  font-weight: normal;
+  color: $purple;
+}
+h3, .h-gamma {
+  @include rem('font-size', 31);
+  font-weight: normal;
+  color: $turquoise;
+}
+h4, .h-delta {
+  @include rem('font-size', 18);
+  color: $darkpurple;
+}
+h5, .h-epsilon {
+  @include rem('font-size', 14);
+}
+h6, .h-zeta {
+  @include rem('font-size', 14);
+}
+
+// Links
+a {
+  text-decoration: none;
+  color: $blue;
+
+  &:hover,
+  &:focus {
+    color: $turquoise;
+  }
+  &:active {
+    color: lighten($turquoise, 25%);
+  }
+}
