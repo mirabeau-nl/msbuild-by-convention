@@ -65,18 +65,16 @@
   <Target Name="InstallBuildDependencies" DependsOnTargets="PrepareGlobalProperties;InstallChocolatey;FetchToolsWithChocolatey;DownloadToolsWithNuget;_PrepareVsTools">	
   </Target>
   <Target Name="InstallDeployDependencies" DependsOnTargets="PrepareGlobalProperties;DownloadToolsWithNuget;_PrepareVsTools">	
-  </Target>
-
-  <Target Name="InstallChocolatey" Condition="!Exists($([System.Environment]::ExpandEnvironmentVariables('$(ChocoPath)')))">
+  </Target>  
+  
+  
+  <Target Name="InstallChocolatey" Condition="!Exists('$(ChocoPath)')">
     <PropertyGroup>
       <ChocolateyInstallLine>@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))" &amp;&amp; SET PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin</ChocolateyInstallLine>
     </PropertyGroup>
-	  <Message Text="Installing chocolatey" Importance="Normal" />
     <!--- Install Chocolatey -->
-    <Exec Command="$(ChocolateyInstallLine)" />		
-	  <Message Text="Chocolatey installed, you may need to close and open the commandprompt." Importance="high" />
+    <Exec Command="$(ChocolateyInstallLine)"  Condition=" '$(ChocolateyInstalled)' == 'False' " />		
   </Target>
-  
   <Target Name="FetchToolsWithChocolatey">
     <PropertyGroup>
       <ChocoPackagesInstalledCheckFile>$(BuildToolsDirectory)choco_packages_installed.txt</ChocoPackagesInstalledCheckFile>
