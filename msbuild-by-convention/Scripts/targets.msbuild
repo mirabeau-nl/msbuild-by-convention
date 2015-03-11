@@ -462,7 +462,7 @@
       <PackageJsonFiles Include="$(HtmlSourceDirectory)**\packag*.json" />
       <PackageJsonFiles Remove="$(SourceDirectory)**\node_modules\**\packag*.json" />
       <PackageJsonFiles Remove="$(HtmlSourceDirectory)**\node_modules\**\packag*.json" />
-    </ItemGroup>         
+    </ItemGroup>
   </Target>
   <Target Name="CoreInstallNodePackages" Inputs="%(PackageJsonFiles.RootDir)%(PackageJsonFiles.Directory)" Outputs="AlwaysExecute">
 
@@ -470,21 +470,27 @@
       <Output TaskParameter="AbsolutePaths" PropertyName="PackageJsonFileLocation" />
     </ConvertToAbsolutePath>
     <PropertyGroup>
-      <NpmPath>npm.cmd</NpmPath>			
-    </PropertyGroup>	
-          
-      <!-- npm fix with this version http://blog.npmjs.org/post/78085451721/npms-self-signed-certificate-is-no-more -->
-    <Exec Command="$(NpmPath) config set ca &quot;&quot;" WorkingDirectory="$(PackageJsonFileLocation)"		/>
-    
-      <!-- Install Grunt in global-->		
-    <Exec Command="$(NpmPath) install grunt-cli -g" WorkingDirectory="$(PackageJsonFileLocation)"/>
-    
+      <NpmPath>npm.cmd</NpmPath>
+    </PropertyGroup>
+
+    <!-- npm fix with this version http://blog.npmjs.org/post/78085451721/npms-self-signed-certificate-is-no-more -->
+    <Exec Command="$(NpmPath) config set ca &quot;&quot;" WorkingDirectory="$(PackageJsonFileLocation)" />
+
+	<!-- Install Grunt in global-->
+    <Exec Command="$(NpmPath) install grunt-cli -g" WorkingDirectory="$(PackageJsonFileLocation)" />
+
+	<!-- Install Grunt in global-->
+    <Exec Command="$(NpmPath) install flatten-packages -g" WorkingDirectory="$(PackageJsonFileLocation)" />
+
     <!-- install patch for win-spawn -->
-    <Exec Command="$(NpmPath) install https://github.com/Ruzzie/win-spawn/archive/2.0.1.tar.gz" WorkingDirectory="$(PackageJsonFileLocation)"		/>
-    
+    <Exec Command="$(NpmPath) install https://github.com/Ruzzie/win-spawn/archive/2.0.1.tar.gz" WorkingDirectory="$(PackageJsonFileLocation)" />
+
     <!-- npm install -->
-    <Exec Command="$(NpmPath) install" WorkingDirectory="$(PackageJsonFileLocation)"		/>
-                 
+    <Exec Command="$(NpmPath) install" WorkingDirectory="$(PackageJsonFileLocation)" />
+
+    <!-- flatten-packages -->
+    <Exec Command="flatten-packages" WorkingDirectory="$(PackageJsonFileLocation)" />
+
   </Target>
    
   <Target Name="RunGruntFiles" DependsOnTargets="InstallNodePackages;BeforeRunGruntFiles;CoreRunGruntFiles" />
