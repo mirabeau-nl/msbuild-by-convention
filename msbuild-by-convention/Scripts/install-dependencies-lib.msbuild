@@ -1,71 +1,71 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
-  <Import Project="properties-convention-based.msbuild"/>
-  <!-- Only import specific file if it exists -->
-  <Import Project="$(CustomBuildScriptsDirectory)install-dependencies-lib-repository-specific.msbuild" Condition="exists('$(CustomBuildScriptsDirectory)install-dependencies-lib-repository-specific.msbuild')"/>
-  <ItemGroup>
-    <OSPackageDependencies Include="nothing">
-      <PackageName>Ruby</PackageName>
-      <CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
-      <CheckIfInstalledCommand>ruby --version</CheckIfInstalledCommand>
-      <CheckIfInstalledOuputCondition>ruby 2.</CheckIfInstalledOuputCondition>
-    </OSPackageDependencies>
-    <OSPackageDependencies Include="nothing">
-      <PackageName>sass -source ruby</PackageName>      
-      <CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
-      <CheckIfInstalledCommand>sass --version</CheckIfInstalledCommand>
-      <CheckIfInstalledOuputCondition>Sass 3</CheckIfInstalledOuputCondition>
-    </OSPackageDependencies>
-    <OSPackageDependencies Include="nothing">
-      <PackageName>nodejs.install</PackageName>      
-      <CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
-      <CheckIfInstalledCommand>node --version</CheckIfInstalledCommand>
-      <CheckIfInstalledOuputCondition>v</CheckIfInstalledOuputCondition>
-    </OSPackageDependencies>
-    <OSPackageDependencies Include="nothing">
-      <PackageName>java.jdk</PackageName>      
-      <CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
-      <CheckIfInstalledCommand>&quot;$(JAVA_HOME)\bin\java.exe&quot; -version</CheckIfInstalledCommand>
-      <CheckIfInstalledOuputCondition>1.</CheckIfInstalledOuputCondition>
-    </OSPackageDependencies>
-    <OSPackageDependencies Include="nothing">
-      <PackageName>maven</PackageName>
-      <CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
-      <CheckIfInstalledCommand>mvn -version</CheckIfInstalledCommand>
-      <CheckIfInstalledOuputCondition>Maven</CheckIfInstalledOuputCondition>
-    </OSPackageDependencies>
-    <OSPackageDependencies Include="nothing">
-      <PackageName>optipng</PackageName>
-      <CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
-      <CheckIfInstalledCommand>optipng -v</CheckIfInstalledCommand>
-      <CheckIfInstalledOuputCondition>OptiPNG version</CheckIfInstalledOuputCondition>
-    </OSPackageDependencies>
-    <OSPackageDependencies Include="nothing">
-      <PackageName>SqlServerDataTools.2012</PackageName>
-      <CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
-      <CheckIfInstalledCommand>dir /b &quot;$(SqlServerRedistPath)&quot;</CheckIfInstalledCommand>
-      <CheckIfInstalledOuputCondition>SqlPackage.exe</CheckIfInstalledOuputCondition>
-    </OSPackageDependencies>
-    <OSPackageDependencies Include="nothing">
-      <PackageName>webdeploy</PackageName>
-      <CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
-      <CheckIfInstalledCommand>dir /b &quot;$(MsDeployDirectory)&quot;</CheckIfInstalledCommand>
-      <CheckIfInstalledOuputCondition>msdeploy.exe</CheckIfInstalledOuputCondition>
-    </OSPackageDependencies>	
-  </ItemGroup>
+	<Import Project="properties-convention-based.msbuild"/>
+	<!-- Only import specific file if it exists -->
+	<Import Project="$(CustomBuildScriptsDirectory)install-dependencies-lib-repository-specific.msbuild" Condition="exists('$(CustomBuildScriptsDirectory)install-dependencies-lib-repository-specific.msbuild')"/>
+	<ItemGroup>
+		<OSPackageDependencies Include="nothing">
+			<PackageName>Ruby</PackageName>
+			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
+			<CheckIfInstalledCommand>ruby --version</CheckIfInstalledCommand>
+			<CheckIfInstalledOuputCondition>ruby 2.</CheckIfInstalledOuputCondition>
+		</OSPackageDependencies>
+		<OSPackageDependencies Include="nothing">
+			<PackageName>sass -source ruby</PackageName>
+			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
+			<CheckIfInstalledCommand>sass --version</CheckIfInstalledCommand>
+			<CheckIfInstalledOuputCondition>Sass 3</CheckIfInstalledOuputCondition>
+		</OSPackageDependencies>
+		<OSPackageDependencies Include="nothing">
+			<PackageName>nodejs.install</PackageName>
+			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
+			<CheckIfInstalledCommand>node --version</CheckIfInstalledCommand>
+			<CheckIfInstalledOuputCondition>v</CheckIfInstalledOuputCondition>
+		</OSPackageDependencies>
+		<OSPackageDependencies Include="nothing">
+			<PackageName>java.jdk</PackageName>
+			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
+			<CheckIfInstalledCommand>&quot;$(JAVA_HOME)\bin\java.exe&quot; -version</CheckIfInstalledCommand>
+			<CheckIfInstalledOuputCondition>1.</CheckIfInstalledOuputCondition>
+		</OSPackageDependencies>
+		<OSPackageDependencies Include="nothing">
+			<PackageName>maven</PackageName>
+			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
+			<CheckIfInstalledCommand>mvn -version</CheckIfInstalledCommand>
+			<CheckIfInstalledOuputCondition>Maven</CheckIfInstalledOuputCondition>
+		</OSPackageDependencies>
+		<OSPackageDependencies Include="nothing">
+			<PackageName>optipng</PackageName>
+			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
+			<CheckIfInstalledCommand>optipng -v</CheckIfInstalledCommand>
+			<CheckIfInstalledOuputCondition>OptiPNG version</CheckIfInstalledOuputCondition>
+		</OSPackageDependencies>
+		<OSPackageDependencies Include="nothing">
+			<PackageName>SqlServerDataTools.2012</PackageName>
+			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
+			<CheckIfInstalledCommand>dir /b &quot;$(SqlServerRedistPath)&quot;</CheckIfInstalledCommand>
+			<CheckIfInstalledOuputCondition>SqlPackage.exe</CheckIfInstalledOuputCondition>
+		</OSPackageDependencies>
+		<OSPackageDependencies Include="nothing">
+			<PackageName>webdeploy</PackageName>
+			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
+			<CheckIfInstalledCommand>dir /b &quot;$(MsDeployDirectory)&quot;</CheckIfInstalledCommand>
+			<CheckIfInstalledOuputCondition>msdeploy.exe</CheckIfInstalledOuputCondition>
+		</OSPackageDependencies>
+	</ItemGroup>
 
-  <PropertyGroup>
-    <JavaExists>False</JavaExists>
-    <JavaExists Condition="'$(JAVA_HOME)' != ''">True</JavaExists>
-  </PropertyGroup>  
-  <Target Name="ExecuteCommandAndCheckOuputOnCondition" 
-      Inputs="%(OSPackageDependencies.PackageName)" 
-      Outputs="%(OSPackageDependencies.PackageName)_data">
-    <Exec Command="%(OSPackageDependencies.CheckIfInstalledCommand)" 
-        Condition="'%(OSPackageDependencies.CheckIfInstalledType)' == 'CommandOutputs'"
-        ContinueOnError="true"
-        ConsoleToMSBuild="true" >
-      <Output TaskParameter="ConsoleOutput" PropertyName="CommandOutput"/>
-    </Exec>
-    <Exec Command="$(ChocoPath) install %(OSPackageDependencies.PackageName)" Condition="!$(CommandOutput.Contains('%(OSPackageDependencies.CheckIfInstalledOuputCondition)')) "/>
-  </Target>
+	<PropertyGroup>
+		<JavaExists>False</JavaExists>
+		<JavaExists Condition="'$(JAVA_HOME)' != ''">True</JavaExists>
+	</PropertyGroup>
+	<Target Name="ExecuteCommandAndCheckOuputOnCondition" 
+			Inputs="%(OSPackageDependencies.PackageName)" 
+			Outputs="%(OSPackageDependencies.PackageName)_data">
+		<Exec Command="%(OSPackageDependencies.CheckIfInstalledCommand)" 
+				Condition="'%(OSPackageDependencies.CheckIfInstalledType)' == 'CommandOutputs'"
+				ContinueOnError="true"
+				ConsoleToMSBuild="true" >
+			<Output TaskParameter="ConsoleOutput" PropertyName="CommandOutput"/>
+		</Exec>
+		<Exec Command="$(ChocoPath) install %(OSPackageDependencies.PackageName)" Condition="!$(CommandOutput.Contains('%(OSPackageDependencies.CheckIfInstalledOuputCondition)')) "/>
+	</Target>
 </Project>
