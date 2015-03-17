@@ -96,7 +96,7 @@
   <Target Name="PrepareGlobalProperties"></Target>
   <Target Name="InstallBuildDependencies" DependsOnTargets="PrepareGlobalProperties;InstallChocolatey;FetchToolsWithChocolatey;DownloadToolsWithNuget;_PrepareVsTools"></Target>
   <Target Name="InstallDeployDependencies" DependsOnTargets="PrepareGlobalProperties;DownloadToolsWithNuget;_PrepareVsTools"></Target>
-  <Target Name="InstallChocolatey" Condition="!Exists('$(ChocoPath)')"></Target>
+  <Target Name="InstallChocolatey" Condition="!Exists($([System.Environment]::ExpandEnvironmentVariables('$(ChocoPath)')))"></Target>
   <Target Name="FetchToolsWithChocolatey"></Target>
   <Target Name="DownloadToolsWithNuget"></Target>
   <Target Name="_PrepareVsTools" DependsOnTargets="DownloadToolsWithNuget"></Target>
@@ -109,7 +109,7 @@
   <Target Name="CopyDependencies"></Target>
   <Target Name="SetAssemblyFileVersion"></Target>
   <Target Name="ReplaceProjectImportStatements" Condition=" Exists('$(VisualStudioSqlServerDataToolsDir)Microsoft.Data.Tools.Schema.SqlTasks.targets') "></Target>
-  <Target Name="Compile" DependsOnTargets="Clean;CopyDependencies;SetAssemblyFileVersion;ReplaceProjectImportStatements;BeforeCompile;CoreCompile;AfterCompile;SassCompile;RunGruntFiles"></Target>
+  <Target Name="Compile" DependsOnTargets="Clean;CopyDependencies;SetAssemblyFileVersion;ReplaceProjectImportStatements;BeforeCompile;CoreCompile;AfterCompile;SassCompile;RunGruntAndGulpFiles"></Target>
   <Target Name="BeforeCompile"></Target>
   <Target Name="CoreCompile" Inputs="%(SolutionsToBuild.RootDir)%(SolutionsToBuild.Directory)" Outputs="NonExistingOutputToTriggerTargetForEverySolution"></Target>
   <Target Name="AfterCompile"></Target>
@@ -127,9 +127,13 @@
   <Target Name="InstallNodePackages" DependsOnTargets="BeforeInstallNodePackages;CoreInstallNodePackages"></Target>
   <Target Name="BeforeInstallNodePackages"></Target>
   <Target Name="CoreInstallNodePackages" Inputs="%(PackageJsonFiles.RootDir)%(PackageJsonFiles.Directory)" Outputs="AlwaysExecute"></Target>
-  <Target Name="RunGruntFiles" DependsOnTargets="InstallNodePackages;BeforeRunGruntFiles;CoreRunGruntFiles"></Target>
+  <Target Name="RunGruntFiles" DependsOnTargets="BeforeRunGruntFiles;CoreRunGruntFiles"></Target>
   <Target Name="BeforeRunGruntFiles"></Target>
   <Target Name="CoreRunGruntFiles" Inputs="%(GruntFiles.RootDir)%(GruntFiles.Directory)" Outputs="AlwaysExecute"></Target>
+  <Target Name="RunGulpFiles" DependsOnTargets="BeforeRunGulpFiles;CoreRunGulpFiles"></Target>
+  <Target Name="BeforeRunGulpFiles"></Target>
+  <Target Name="CoreRunGulpFiles" Inputs="%(GulpFiles.RootDir)%(GulpFiles.Directory)" Outputs="AlwaysExecute"></Target>
+  <Target Name="RunGruntAndGulpFiles" DependsOnTargets="InstallNodePackages;RunGruntFiles;RunGulpFiles"></Target>
   <Target Name="MinifyJavaScript" DependsOnTargets="BeforeMinifyJavaScript;CoreMinifyJavaScript" Condition="'$(SkipDefaultJavascriptMinification)' == 'False'"></Target>
   <Target Name="BeforeMinifyJavaScript"></Target>
   <Target Name="CoreMinifyJavaScript" Inputs="%(JavaScriptFiles.RootDir)%(JavaScriptFiles.Directory)" Outputs="AlwaysExecute"></Target>
