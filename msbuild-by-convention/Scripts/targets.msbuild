@@ -225,7 +225,7 @@
 
 	</Target>
 
-	<Target Name="Compile" DependsOnTargets="Clean;CopyDependencies;SetAssemblyFileVersion;ReplaceProjectImportStatements;BeforeCompile;CoreCompile;AfterCompile;SassCompile;RunGruntFiles" />
+	<Target Name="Compile" DependsOnTargets="Clean;CopyDependencies;SetAssemblyFileVersion;ReplaceProjectImportStatements;BeforeCompile;CoreCompile;AfterCompile;SassCompile;RunGruntAndGulpFiles" />
 	<Target Name="BeforeCompile">
 
 		<CallTarget Targets="CheckJavascriptWithJsHint" Condition=" $(CheckJavascriptOnBuild) == 'True' " />
@@ -446,7 +446,7 @@
 	<!-- endregion RunJMeterTests targets -->
 
 	<!-- beginregion Release targets -->
-	<Target Name="InstallNodePackages" DependsOnTargets="BeforeInstallNodePackages;CoreInstallNodePackages" />
+	<Target Name="InstallNodePackages" DependsOnTargets="BeforeInstallNodePackages;CoreInstallNodePackages" />	
 	<Target Name="BeforeInstallNodePackages">
 		<ItemGroup>
 			<PackageJsonFiles Remove="@(PackageJsonFiles)" />
@@ -454,7 +454,7 @@
 			<PackageJsonFiles Include="$(HtmlSourceDirectory)**\packag*.json" />
 			<PackageJsonFiles Remove="$(SourceDirectory)**\node_modules\**\packag*.json" />
 			<PackageJsonFiles Remove="$(HtmlSourceDirectory)**\node_modules\**\packag*.json" />
-		</ItemGroup>
+ 		</ItemGroup>
 	</Target>
 	<Target Name="CoreInstallNodePackages" Inputs="%(PackageJsonFiles.RootDir)%(PackageJsonFiles.Directory)" Outputs="AlwaysExecute">
 		<ConvertToAbsolutePath Paths="%(PackageJsonFiles.RootDir)%(PackageJsonFiles.Directory)">
@@ -467,10 +467,13 @@
 		<!-- npm fix with this version http://blog.npmjs.org/post/78085451721/npms-self-signed-certificate-is-no-more -->
 		<Exec Command="$(NpmPath) config set ca &quot;&quot;" WorkingDirectory="$(PackageJsonFileLocation)" />
 
-		<!-- Install Grunt in global-->
+		<!-- Install Grunt in global -->
 		<Exec Command="$(NpmPath) install grunt-cli -g" WorkingDirectory="$(PackageJsonFileLocation)" />
 
-		<!-- Install flatten-packages in global-->
+		<!-- Install Gulp in global -->
+		<Exec Command="$(NpmPath) install gulp -g" WorkingDirectory="$(PackageJsonFileLocation)" />
+
+		<!-- Install flatten-packages in global -->
 		<Exec Command="$(NpmPath) install flatten-packages -g" WorkingDirectory="$(PackageJsonFileLocation)" />
 
 		<!-- install patch for win-spawn -->
@@ -481,10 +484,9 @@
 
 		<!-- flatten-packages -->
 		<Exec Command="flatten-packages" WorkingDirectory="$(PackageJsonFileLocation)" />
-
 	</Target>
 
-	<Target Name="RunGruntFiles" DependsOnTargets="InstallNodePackages;BeforeRunGruntFiles;CoreRunGruntFiles" />
+	<Target Name="RunGruntFiles" DependsOnTargets="BeforeRunGruntFiles;CoreRunGruntFiles" />
 	<Target Name="BeforeRunGruntFiles">		
 		<ItemGroup>
 			<GruntFiles Remove="@(GruntFiles)" />
@@ -498,8 +500,8 @@
 		<ConvertToAbsolutePath Paths="%(GruntFiles.RootDir)%(GruntFiles.Directory)">
 			<Output TaskParameter="AbsolutePaths" PropertyName="GruntFileLocation" />
 		</ConvertToAbsolutePath>	
-				 
-			<PropertyGroup>
+
+		<PropertyGroup>
 			<GruntPath>grunt.cmd</GruntPath>
 		</PropertyGroup>
 
@@ -513,7 +515,41 @@
 		</ReadLinesFromFile>
 		<Message Text="@(OutputLines->'%(Identity)', '%0a%0d')" Condition="'$(GruntErrorCode)' == '0'"/>
 		<Error Text="@(OutputLines)" Condition="'$(GruntErrorCode)' != '0'" Code="$(GruntErrorCode)"/>
+	</Target>
 
+	<Target Name="RunGulpFiles" DependsOnTargets="BeforeRunGulpFiles;CoreRunGulpFiles" />
+	<Target Name="BeforeRunGulpFiles">
+		<ItemGroup>
+			<GulpFiles Remove="@(GulpFiles)" />
+			<GulpFiles Include="$(SourceDirectory)**\gulpfil*.js" />
+			<GulpFiles Include="$(HtmlSourceDirectory)**\gulpfil*.js" />
+			<GulpFiles Remove="$(SourceDirectory)**\node_modules\**\gulpfil*.js" />
+			<GulpFiles Remove="$(HtmlSourceDirectory)**\node_modules\**\gulpfil*.js" />
+		</ItemGroup>
+	</Target>
+	<Target Name="CoreRunGulpFiles" Inputs="%(GulpFiles.RootDir)%(GulpFiles.Directory)" Outputs="AlwaysExecute">
+		<ConvertToAbsolutePath Paths="%(GulpFiles.RootDir)%(GulpFiles.Directory)">
+			<Output TaskParameter="AbsolutePaths" PropertyName="GulpFileLocation" />
+		</ConvertToAbsolutePath>	
+
+		<PropertyGroup>
+			<GulpPath>gulp.cmd</GulpPath>
+		</PropertyGroup>
+
+		<!-- gulp build -->
+		<Delete Files="%(GulpFiles.RootDir)%(GulpFiles.Directory)gulp-output.txt"/>
+		<Exec Timeout="120000" ContinueOnError="True" Command="$(GulpPath) build --no-color 2&gt;&amp;1&gt;gulp-output.txt" WorkingDirectory="$(GulpFileLocation)">
+			<Output TaskParameter="ExitCode" PropertyName="GulpErrorCode"/>
+		</Exec>
+		<ReadLinesFromFile File="%(GulpFiles.RootDir)%(GulpFiles.Directory)gulp-output.txt">
+			 <Output TaskParameter="Lines" ItemName="OutputLines"/>
+		</ReadLinesFromFile>
+		<Message Text="GulpErrorCode: $(GulpErrorCode)"/>
+		<Message Text="@(OutputLines->'%(Identity)', '%0a%0d')" Condition="'$(GulpErrorCode)' == '0'"/>
+		<Error Text="@(OutputLines)" Condition="'$(GulpErrorCode)' != '0'" Code="$(GulpErrorCode)"/>
+	</Target>
+
+	<Target Name="RunGruntAndGulpFiles" DependsOnTargets="InstallNodePackages;RunGruntFiles;RunGulpFiles">
 	</Target>
 
 	<Target Name="MinifyJavaScript" DependsOnTargets="BeforeMinifyJavaScript;CoreMinifyJavaScript" Condition="'$(SkipDefaultJavascriptMinification)' == 'False'"/>
