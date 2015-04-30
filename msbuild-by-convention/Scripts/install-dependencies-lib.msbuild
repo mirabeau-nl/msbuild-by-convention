@@ -4,16 +4,16 @@
 	<Import Project="$(CustomBuildScriptsDirectory)install-dependencies-lib-repository-specific.msbuild" Condition="exists('$(CustomBuildScriptsDirectory)install-dependencies-lib-repository-specific.msbuild')"/>
 	<ItemGroup>
 		<OSPackageDependencies Include="nothing">
+			<PackageName>upgrade chocolatey</PackageName>
+			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
+			<CheckIfInstalledCommand>choco</CheckIfInstalledCommand>
+			<CheckIfInstalledOuputCondition>v0.9.9.5</CheckIfInstalledOuputCondition>
+		</OSPackageDependencies>
+		<OSPackageDependencies Include="nothing">
 			<PackageName>Ruby</PackageName>
 			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
 			<CheckIfInstalledCommand>ruby --version</CheckIfInstalledCommand>
 			<CheckIfInstalledOuputCondition>ruby 2.</CheckIfInstalledOuputCondition>
-		</OSPackageDependencies>
-		<OSPackageDependencies Include="nothing">
-			<PackageName>sass -source ruby</PackageName>
-			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
-			<CheckIfInstalledCommand>sass --version</CheckIfInstalledCommand>
-			<CheckIfInstalledOuputCondition>Sass 3</CheckIfInstalledOuputCondition>
 		</OSPackageDependencies>
 		<OSPackageDependencies Include="nothing">
 			<PackageName>nodejs.install</PackageName>
@@ -51,6 +51,13 @@
 			<CheckIfInstalledCommand>dir /b &quot;$(MsDeployDirectory)&quot;</CheckIfInstalledCommand>
 			<CheckIfInstalledOuputCondition>msdeploy.exe</CheckIfInstalledOuputCondition>
 		</OSPackageDependencies>
+		
+		<GemPackageDependencies Include="nothing">
+			<PackageName>sass</PackageName>
+			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
+			<CheckIfInstalledCommand>sass --version</CheckIfInstalledCommand>
+			<CheckIfInstalledOuputCondition>Sass 3</CheckIfInstalledOuputCondition>
+		</GemPackageDependencies>
 	</ItemGroup>
 
 	<PropertyGroup>
@@ -66,6 +73,19 @@
 				ConsoleToMSBuild="true" >
 			<Output TaskParameter="ConsoleOutput" PropertyName="CommandOutput"/>
 		</Exec>
-		<Exec Command="$(ChocoPath) install %(OSPackageDependencies.PackageName)" Condition="!$(CommandOutput.Contains('%(OSPackageDependencies.CheckIfInstalledOuputCondition)')) "/>
+		<Exec Command="$(ChocoPath) install -y %(OSPackageDependencies.PackageName)" Condition="!$(CommandOutput.Contains('%(OSPackageDependencies.CheckIfInstalledOuputCondition)')) "/>
 	</Target>
+	
+	<Target Name="ExecuteGemCommandAndCheckOuputOnCondition" 
+			Inputs="%(GemPackageDependencies.PackageName)" 
+			Outputs="%(GemPackageDependencies.PackageName)_data">
+		<Exec Command="%(GemPackageDependencies.CheckIfInstalledCommand)" 
+				Condition="'%(GemPackageDependencies.CheckIfInstalledType)' == 'CommandOutputs'"
+				ContinueOnError="true"
+				ConsoleToMSBuild="true" >
+			<Output TaskParameter="ConsoleOutput" PropertyName="CommandOutput"/>
+		</Exec>
+		<Exec Command="gem install %(GemPackageDependencies.PackageName) --source http://api.rubygems.org" Condition="!$(CommandOutput.Contains('%(GemPackageDependencies.CheckIfInstalledOuputCondition)')) "/>
+	</Target>
+	
 </Project>

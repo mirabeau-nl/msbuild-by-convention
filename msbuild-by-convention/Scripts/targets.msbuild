@@ -89,7 +89,11 @@
 		<Message Text="Same version, no need to install chocoo packages" Importance="Normal" Condition=" @(LastChocoRunBuildVersionFromFile) == $(BuildVersion) " />
 		<Message Text="Other version, fetching choco packages first" Importance="Normal" Condition=" @(LastChocoRunBuildVersionFromFile) != $(BuildVersion) " />
 
+		<!-- Install Choco packages -->
 		<MSBuild Projects="$(ScriptsDirectory)install-dependencies-lib.msbuild" Targets="ExecuteCommandAndCheckOuputOnCondition" Condition=" @(LastChocoRunBuildVersionFromFile) != $(BuildVersion) " />
+		
+		<!-- Install Gems -->
+		<MSBuild Projects="$(ScriptsDirectory)install-dependencies-lib.msbuild" Targets="ExecuteGemCommandAndCheckOuputOnCondition" Condition=" @(LastChocoRunBuildVersionFromFile) != $(BuildVersion) " />
 
 		<WriteLinesToFile File="$(ChocoPackagesInstalledCheckFile)" Lines="$(BuildVersion)" Overwrite="true" />
 	</Target>
