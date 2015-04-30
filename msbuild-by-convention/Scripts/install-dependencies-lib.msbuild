@@ -10,43 +10,43 @@
 			<CheckIfInstalledOuputCondition>v0.9.9.5</CheckIfInstalledOuputCondition>
 		</OSPackageDependencies>
 		<OSPackageDependencies Include="nothing">
-			<PackageName>Ruby</PackageName>
+			<PackageName>Ruby -y</PackageName>
 			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
 			<CheckIfInstalledCommand>ruby --version</CheckIfInstalledCommand>
 			<CheckIfInstalledOuputCondition>ruby 2.</CheckIfInstalledOuputCondition>
 		</OSPackageDependencies>
 		<OSPackageDependencies Include="nothing">
-			<PackageName>nodejs.install</PackageName>
+			<PackageName>nodejs.install -y</PackageName>
 			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
 			<CheckIfInstalledCommand>node --version</CheckIfInstalledCommand>
 			<CheckIfInstalledOuputCondition>v0.12</CheckIfInstalledOuputCondition>
 		</OSPackageDependencies>
 		<OSPackageDependencies Include="nothing">
-			<PackageName>java.jdk</PackageName>
+			<PackageName>java.jdk -y</PackageName>
 			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
 			<CheckIfInstalledCommand>&quot;$(JAVA_HOME)\bin\java.exe&quot; -version</CheckIfInstalledCommand>
 			<CheckIfInstalledOuputCondition>1.</CheckIfInstalledOuputCondition>
 		</OSPackageDependencies>
 		<OSPackageDependencies Include="nothing">
-			<PackageName>maven</PackageName>
+			<PackageName>maven -y</PackageName>
 			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
 			<CheckIfInstalledCommand>mvn -version</CheckIfInstalledCommand>
 			<CheckIfInstalledOuputCondition>Maven</CheckIfInstalledOuputCondition>
 		</OSPackageDependencies>
 		<OSPackageDependencies Include="nothing">
-			<PackageName>optipng</PackageName>
+			<PackageName>optipng -y</PackageName>
 			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
 			<CheckIfInstalledCommand>optipng -v</CheckIfInstalledCommand>
 			<CheckIfInstalledOuputCondition>OptiPNG version</CheckIfInstalledOuputCondition>
 		</OSPackageDependencies>
 		<OSPackageDependencies Include="nothing">
-			<PackageName>SqlServerDataTools.2012</PackageName>
+			<PackageName>SqlServerDataTools.2012 -y</PackageName>
 			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
 			<CheckIfInstalledCommand>dir /b &quot;$(SqlServerRedistPath)&quot;</CheckIfInstalledCommand>
 			<CheckIfInstalledOuputCondition>SqlPackage.exe</CheckIfInstalledOuputCondition>
 		</OSPackageDependencies>
 		<OSPackageDependencies Include="nothing">
-			<PackageName>webdeploy</PackageName>
+			<PackageName>webdeploy -y</PackageName>
 			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
 			<CheckIfInstalledCommand>dir /b &quot;$(MsDeployDirectory)&quot;</CheckIfInstalledCommand>
 			<CheckIfInstalledOuputCondition>msdeploy.exe</CheckIfInstalledOuputCondition>
@@ -73,7 +73,7 @@
 				ConsoleToMSBuild="true" >
 			<Output TaskParameter="ConsoleOutput" PropertyName="CommandOutput"/>
 		</Exec>
-		<Exec Command="$(ChocoPath) install -y %(OSPackageDependencies.PackageName)" Condition="!$(CommandOutput.Contains('%(OSPackageDependencies.CheckIfInstalledOuputCondition)')) "/>
+		<Exec Command="$(ChocoPath) install %(OSPackageDependencies.PackageName)" Condition="!$(CommandOutput.Contains('%(OSPackageDependencies.CheckIfInstalledOuputCondition)')) "/>
 	</Target>
 	
 	<Target Name="ExecuteGemCommandAndCheckOuputOnCondition" 
