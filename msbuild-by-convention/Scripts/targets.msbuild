@@ -431,7 +431,7 @@
 
   <!-- beginregion RunJMeterTests targets -->
 
-  <Target Name="RunJMeterTests" DependsOnTargets="Clean;DownloadAndExtractJmeterToBuildTools;BeforeRunJMeterTests;CoreRunJMeterTests" />
+  <Target Name="RunJMeterTests" DependsOnTargets="DownloadToolsWithNuget;Clean;DownloadAndExtractJmeterToBuildTools;BeforeRunJMeterTests;CoreRunJMeterTests" />
   <Target Name="BeforeRunJMeterTests">
     <ItemGroup>
       <JMeterTestProjects Remove="@(JMeterTestProjects)" />
