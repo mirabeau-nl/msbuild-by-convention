@@ -131,6 +131,8 @@
     <MinifyRootDirectory Condition=" '$(MinifyRootDirectory)' == '' ">$(ReleaseTempDirectory)</MinifyRootDirectory>
     <!-- possible values: Both, NoVersion or WithVersion -->
     <MinifyVersioningType Condition=" '$(MinifyVersioningType)' == '' ">Both</MinifyVersioningType> 
+		
+		<RemoveWebConfigFromReleaseZip Condition=" '$(RemoveWebConfigFromReleaseZip)' == '' ">False</RemoveWebConfigFromReleaseZip>
 
     <!-- deploy properties -->
     <ProjectToDeploy></ProjectToDeploy>	
@@ -147,6 +149,9 @@
     <DeployDirectory></DeployDirectory>
     <DeployDatabaseType Condition=" '$(DeployDatabaseType)' == '' ">MsSql</DeployDatabaseType> <!-- [MsSql|Oracle|MySql] -->
     
+		<EnableDoNotDeleteRule Condition=" '$(EnableDoNotDeleteRule)' == 'true' ">True</EnableDoNotDeleteRule>
+		<EnableDoNotDeleteRule Condition=" '$(EnableDoNotDeleteRule)' == 'false' ">False</EnableDoNotDeleteRule>
+		<EnableDoNotDeleteRule Condition=" '$(EnableDoNotDeleteRule)' == '' ">False</EnableDoNotDeleteRule>
 
     <!-- runtime properties -->
     <ServiceUsername></ServiceUsername>
@@ -240,8 +245,8 @@
     <FilesToCopyForWebsiteReleasePattern></FilesToCopyForWebsiteReleasePattern>
     <FilesToRemoveForWebsiteReleasePattern></FilesToRemoveForWebsiteReleasePattern>
 
-	<CssFilesToCopyAfterCopySourcePattern></CssFilesToCopyAfterCopySourcePattern>
-	<CssFilesToCopyAfterCopyReleaseDestination></CssFilesToCopyAfterCopyReleaseDestination>
+		<CssFilesToCopyAfterCopySourcePattern></CssFilesToCopyAfterCopySourcePattern>
+		<CssFilesToCopyAfterCopyReleaseDestination></CssFilesToCopyAfterCopyReleaseDestination>
   </PropertyGroup>
 
   <ItemGroup>

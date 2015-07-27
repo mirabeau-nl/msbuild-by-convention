@@ -1002,6 +1002,10 @@
     <MSBuild.ExtensionPack.FileSystem.Folder TaskAction="RemoveContent" Path="$(ReleaseTempDirectory)" Condition=" Exists('$(ReleaseTempDirectory)') " />
     <RemoveDir Directories="$(ReleaseTempDirectory)" />
 
+		<!-- remove web.config so we don't put it in the release zip -->
+		<Message Text="remove web.config: [$(ReleaseDirectory)%(AllEnvironments.Identity)\$(RelativeProjectReleaseDirectory)\web.config]" Condition="$(RemoveWebConfigFromReleaseZip) == 'True'" />
+		<Delete Files="$(ReleaseDirectory)%(AllEnvironments.Identity)\$(RelativeProjectReleaseDirectory)\web.config" Condition="$(RemoveWebConfigFromReleaseZip) == 'True'" />
+
     <!-- zip release directory and store zip with version number one directory above -->
     <ItemGroup>
       <FilesToZip Remove="@(FilesToZip)" />
@@ -1279,7 +1283,7 @@
       <MSDeploySkipDirectoryParameter Condition=" $(DeploySkipDirectoryPattern) != '' ">-skip:objectName=dirPath,absolutePath=&quot;$(DeploySkipDirectoryPattern)&quot;</MSDeploySkipDirectoryParameter>
       <MSDeploySkipFileParameter Condition=" $(DeploySkipFilePattern) != '' ">-skip:objectName=filePath,absolutePath=&quot;$(DeploySkipFilePattern)&quot;</MSDeploySkipFileParameter>
       <ProjectReleaseDirectory>%(MSDeployProjectsToDeploy.RootDir)%(MSDeployProjectsToDeploy.Directory)$(ProjectToDeploy)</ProjectReleaseDirectory>
-      <OptionalArgument Condition="$(EnableDoNotDeleteRule) == 'true'">-enableRule:DoNotDeleteRule</OptionalArgument>
+			<EnableRuleDoNotDeleteRule Condition="$(EnableDoNotDeleteRule) == 'True'">-enableRule:DoNotDeleteRule</EnableRuleDoNotDeleteRule>
     </PropertyGroup>
 
     <Message Importance="high" Text="Using 'normal' Msdeploy option [wmsvc[" Condition="$(UseMsDepoyAzureTask) == 'False'" />
@@ -1287,11 +1291,11 @@
 
     <!--Azure deploy does not use port 8192, therefore wmsvc cannot be used. Use Computername instead.-->
     <Exec Condition="$(UseMsDepoyAzureTask) == 'True'"
-          Command="&quot;$(MsDeployPath)&quot; -verb:sync -source:contentpath=&quot;$(ProjectReleaseDirectory)&quot; -dest:contentpath=&quot;$(DeployTargetName)&quot;,Computername=&quot;$(DeployServer)/msdeploy.axd?site=$(DeployTargetName)&quot;,username=&quot;$(DeployUsername)&quot;,password=&quot;$(DeployPassword)&quot;,AuthType=&quot;Basic&quot; $(MSDeploySkipDirectoryParameter) $(MSDeploySkipFileParameter)"
+				Command="&quot;$(MsDeployPath)&quot; -verb:sync -source:contentpath=&quot;$(ProjectReleaseDirectory)&quot; -dest:contentpath=&quot;$(DeployTargetName)&quot;,Computername=&quot;$(DeployServer)/msdeploy.axd?site=$(DeployTargetName)&quot;,username=&quot;$(DeployUsername)&quot;,password=&quot;$(DeployPassword)&quot;,AuthType=&quot;Basic&quot; $(MSDeploySkipDirectoryParameter) $(MSDeploySkipFileParameter) $(EnableRuleDoNotDeleteRule)"
            />
     
     <Exec Condition="$(UseMsDepoyAzureTask) == 'False'" 
-          Command="&quot;$(MsDeployPath)&quot; -verb:sync -source:contentpath=&quot;$(ProjectReleaseDirectory)&quot; -dest:contentpath=&quot;$(DeployTargetName)&quot;,wmsvc=$(DeployServer),username=$(DeployUsername),password=$(DeployPassword) -allowUntrusted $(MSDeploySkipDirectoryParameter) $(MSDeploySkipFileParameter) $(OptionalArgument)"
+				Command="&quot;$(MsDeployPath)&quot; -verb:sync -source:contentpath=&quot;$(ProjectReleaseDirectory)&quot; -dest:contentpath=&quot;$(DeployTargetName)&quot;,wmsvc=$(DeployServer),username=$(DeployUsername),password=$(DeployPassword) -allowUntrusted $(MSDeploySkipDirectoryParameter) $(MSDeploySkipFileParameter) $(EnableRuleDoNotDeleteRule)"
            />
 
     <RemoveDir Directories="$(ProjectReleaseDirectory)" />
