@@ -129,7 +129,9 @@
 		<MinifyRootDirectory Condition=" '$(MinifyInSourceDirectory)' == '' Or '$(MinifyInSourceDirectory)' == 'True' ">$(SourceDirectory)</MinifyRootDirectory>
 		<MinifyRootDirectory Condition=" '$(MinifyRootDirectory)' == '' ">$(ReleaseTempDirectory)</MinifyRootDirectory>
 		<!-- possible values: Both, NoVersion or WithVersion -->
-		<MinifyVersioningType Condition=" '$(MinifyVersioningType)' == '' ">Both</MinifyVersioningType> 
+		<MinifyVersioningType Condition=" '$(MinifyVersioningType)' == '' ">Both</MinifyVersioningType>
+		
+		<RemoveWebConfigFromReleaseZip Condition=" '$(RemoveWebConfigFromReleaseZip)' == '' ">False</RemoveWebConfigFromReleaseZip>
 
 		<!-- deploy properties -->
 		<ProjectToDeploy></ProjectToDeploy>	
@@ -242,8 +244,8 @@
 		<FilesToCopyForWebsiteReleasePattern></FilesToCopyForWebsiteReleasePattern>
 		<FilesToRemoveForWebsiteReleasePattern></FilesToRemoveForWebsiteReleasePattern>
 
-	<CssFilesToCopyAfterCopySourcePattern></CssFilesToCopyAfterCopySourcePattern>
-	<CssFilesToCopyAfterCopyReleaseDestination></CssFilesToCopyAfterCopyReleaseDestination>
+		<CssFilesToCopyAfterCopySourcePattern></CssFilesToCopyAfterCopySourcePattern>
+		<CssFilesToCopyAfterCopyReleaseDestination></CssFilesToCopyAfterCopyReleaseDestination>
 	</PropertyGroup>
 
 	<ItemGroup>

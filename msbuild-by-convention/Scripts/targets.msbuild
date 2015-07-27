@@ -1033,6 +1033,10 @@
 		<MSBuild.ExtensionPack.FileSystem.Folder TaskAction="RemoveContent" Path="$(ReleaseTempDirectory)" Condition=" Exists('$(ReleaseTempDirectory)') " />
 		<RemoveDir Directories="$(ReleaseTempDirectory)" />
 
+		<!-- remove web.config so we don't put it in the release zip -->
+		<Message Text="remove web.config: [$(ReleaseDirectory)%(AllEnvironments.Identity)\$(RelativeProjectReleaseDirectory)\web.config]" Condition="$(RemoveWebConfigFromReleaseZip) == 'True'" />
+		<Delete Files="$(ReleaseDirectory)%(AllEnvironments.Identity)\$(RelativeProjectReleaseDirectory)\web.config" Condition="$(RemoveWebConfigFromReleaseZip) == 'True'" />
+
 		<!-- zip release directory and store zip with version number one directory above -->
 		<ItemGroup>
 			<FilesToZip Remove="@(FilesToZip)" />
