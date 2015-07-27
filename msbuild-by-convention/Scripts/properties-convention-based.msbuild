@@ -146,6 +146,9 @@
 		<DeployDirectory></DeployDirectory>
 		<DeployDatabaseType Condition=" '$(DeployDatabaseType)' == '' ">MsSql</DeployDatabaseType> <!-- [MsSql|Oracle|MySql] -->
 
+		<EnableDoNotDeleteRule Condition=" '$(EnableDoNotDeleteRule)' == 'true' ">True</EnableDoNotDeleteRule>
+		<EnableDoNotDeleteRule Condition=" '$(EnableDoNotDeleteRule)' == 'false' ">False</EnableDoNotDeleteRule>
+		<EnableDoNotDeleteRule Condition=" '$(EnableDoNotDeleteRule)' == '' ">False</EnableDoNotDeleteRule>
 
 		<!-- runtime properties -->
 		<ServiceUsername></ServiceUsername>
