@@ -230,6 +230,7 @@
     <!-- solutions that have a dependency order are specified in properties-repository-specific.msbuild; over here we add all solutions so it's not neccessary to list them all in properties-repository-specific.msbuild -->
     <ItemGroup>
       <SolutionsToBuild Include="$(CSharpSourceDirectory)**\*.sln" />
+      <SolutionsToBuild Remove="$(CSharpSourceDirectory)**\node_modules\**\*.sln" />
     </ItemGroup>
 
     <Delete Files="$(BuildVersionFilePath)" Condition=" Exists('$(BuildVersionFilePath)') " />
