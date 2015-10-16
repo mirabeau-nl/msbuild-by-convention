@@ -67,7 +67,6 @@
   <Target Name="InstallDeployDependencies" DependsOnTargets="PrepareGlobalProperties;DownloadToolsWithNuget;_PrepareVsTools">	
   </Target>  
   
-  
   <Target Name="InstallChocolatey" Condition="!Exists('$(ChocoPath)')">
     <PropertyGroup>
       <ChocolateyInstallLine>@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))" &amp;&amp; SET PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin</ChocolateyInstallLine>
@@ -178,8 +177,6 @@
   <UsingTask AssemblyFile="$(ExtensionTasksPath)" TaskName="MSBuild.ExtensionPack.Computer.Network"/>
   <UsingTask AssemblyFile="$(ExtensionTasksPath)" TaskName="MSBuild.ExtensionPack.Computer.WindowsService"/>
   <UsingTask AssemblyFile="$(ExtensionTasksPath)" TaskName="MSBuild.ExtensionPack.FileSystem.RoboCopy"/>
-  
-
 
   <Target Name="CreateDirectories" DependsOnTargets="DownloadToolsWithNuget">
     <MakeDir Directories="@(DirectoriesToCreate)" />
@@ -225,7 +222,7 @@
 
   </Target>
 
-  <Target Name="Compile" DependsOnTargets="Clean;CopyDependencies;SetAssemblyFileVersion;ReplaceProjectImportStatements;BeforeCompile;CoreCompile;AfterCompile;SassCompile;RunGruntFiles" />
+  <Target Name="Compile" DependsOnTargets="Clean;CopyDependencies;SetAssemblyFileVersion;ReplaceProjectImportStatements;BeforeCompile;CoreCompile;AfterCompile;SassCompile;RunGruntAndGulpFiles" />
   <Target Name="BeforeCompile">
 
     <CallTarget Targets="CheckJavascriptWithJsHint" Condition=" $(CheckJavascriptOnBuild) == 'True' " />
@@ -368,8 +365,6 @@
     <!-- run tests with coverage (https://github.com/sawilde/opencover/wiki/Usage) -->
     <Exec Command="$(OpenCoverPath)OpenCover.Console.exe -register:user -returntargetcode -target:$(NUnitToolPath)nunit-console.exe -targetargs:&quot;@(NunitTestAssemblies -> '%(FullPath)', ' ') /result=$(TestResultsDirectory)NUnit.Results.%(NunitTestAssemblies.Filename).xml /noshadow&quot; -filter:&quot;$(OpenCoverFilter)&quot; -output:$(CodeCoverageDirectory)NUnit.Coverage.%(NunitTestAssemblies.Filename).xml" Condition=" @(NunitTestAssemblies) != '' And $(IncludeCoverage) == 'True' " ContinueOnError="$(ContinueOnTestError)" />
 
-
-
     <!-- filter out test assemblies if Machine.Specifications.dll is not referenced -->
     <ItemGroup>
       <MSpecTestAssemblies Remove="@(MSpecTestAssemblies)" />
@@ -386,8 +381,6 @@
     <!-- run tests with coverage (https://github.com/sawilde/opencover/wiki/Usage) -->
     <Exec Command="$(OpenCoverPath)OpenCover.Console.exe -register:user -returntargetcode -target:$(MSpecRunnerPath) -targetargs:&quot;--xml $(TestResultsDirectory)MSpecTemp.Results.%(MSpecTestAssemblies.Filename).xml @(MSpecTestAssemblies -> '%(Identity)', ' ')&quot; -filter:&quot;$(OpenCoverFilter)&quot; -output:$(CodeCoverageDirectory)MSpec.Coverage.%(MSpecTestAssemblies.Filename).xml" Condition=" @(MSpecTestAssemblies) != '' And $(IncludeCoverage) == 'True' " ContinueOnError="$(ContinueOnTestError)" />
 
-
-
     <!-- filter out test assemblies if Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll is not referenced -->
     <ItemGroup>
       <MSTestTestAssemblies Remove="@(MSTestTestAssemblies)" />
@@ -402,7 +395,6 @@
     <!-- run tests with coverage (https://github.com/sawilde/opencover/wiki/Usage) -->
     <Exec Command="$(OpenCoverPath)OpenCover.Console.exe -register:user -returntargetcode -target:&quot;$(MSTestRunnerPath)&quot; -targetargs:&quot;/testcontainer:%(MSTestTestAssemblies.Identity) /resultsfile:$(TestResultsDirectory)MsTest.%(MSTestTestAssemblies.Filename).Results.xml /nologo&quot; -filter:&quot;$(OpenCoverFilter)&quot; -output:$(CodeCoverageDirectory)MSTest.Coverage.%(MSTestTestAssemblies.Filename).xml" Condition=" @(MSTestTestAssemblies) != '' And $(IncludeCoverage) == 'True' " ContinueOnError="$(ContinueOnTestError)" />
 
-
     <!-- convert coverage xml to html report (http://reportgenerator.codeplex.com/) -->
     <Exec Command="&quot;$(ReportGeneratorPath)ReportGenerator.exe&quot; &quot;-reports:$(CodeCoverageDirectory)\*.xml&quot; &quot;-targetdir:$(CodeCoverageDirectory)\&quot; -reporttypes:Html;HtmlSummary" Condition=" ( @(NunitTestAssemblies) != '' Or @(MSpecTestAssemblies) != '' Or @(MSTestTestAssemblies) != '' ) And $(IncludeCoverage) == 'True' " />
 
@@ -415,7 +407,6 @@
       OutputPaths="$(CodeCoverageDirectory)%(CoverageFiles.FileName).ncover.xml" Condition=" ( @(NunitTestAssemblies) != '' Or @(MSpecTestAssemblies) != '' Or @(MSTestTestAssemblies) != '' ) And $(IncludeCoverage) == 'True' " />
 
   </Target>
-
 
   <Target Name="RunYSlowTests">
 
@@ -463,29 +454,36 @@
     </ItemGroup>         
   </Target>
   <Target Name="CoreInstallNodePackages" Inputs="%(PackageJsonFiles.RootDir)%(PackageJsonFiles.Directory)" Outputs="AlwaysExecute">
-
     <ConvertToAbsolutePath Paths="%(PackageJsonFiles.RootDir)%(PackageJsonFiles.Directory)">
       <Output TaskParameter="AbsolutePaths" PropertyName="PackageJsonFileLocation" />
     </ConvertToAbsolutePath>
     <PropertyGroup>
       <NpmPath>npm.cmd</NpmPath>			
     </PropertyGroup>	
-          
+
       <!-- npm fix with this version http://blog.npmjs.org/post/78085451721/npms-self-signed-certificate-is-no-more -->
     <Exec Command="$(NpmPath) config set ca &quot;&quot;" WorkingDirectory="$(PackageJsonFileLocation)"		/>
     
       <!-- Install Grunt in global-->		
     <Exec Command="$(NpmPath) install grunt-cli -g" WorkingDirectory="$(PackageJsonFileLocation)"/>
+
+	<!-- Install Gulp in global -->
+	<Exec Command="$(NpmPath) install gulp -g" WorkingDirectory="$(PackageJsonFileLocation)" />
+
+	<!-- Install flatten-packages in global -->
+	<Exec Command="$(NpmPath) install flatten-packages -g" WorkingDirectory="$(PackageJsonFileLocation)" />
     
     <!-- install patch for win-spawn -->
     <Exec Command="$(NpmPath) install https://github.com/Ruzzie/win-spawn/archive/2.0.1.tar.gz" WorkingDirectory="$(PackageJsonFileLocation)"		/>
     
     <!-- npm install -->
-    <Exec Command="$(NpmPath) install" WorkingDirectory="$(PackageJsonFileLocation)"		/>
-                 
+    <Exec Command="$(NpmPath) install" WorkingDirectory="$(PackageJsonFileLocation)" />
+
+	<!-- flatten-packages -->
+	<Exec Command="flatten-packages" WorkingDirectory="$(PackageJsonFileLocation)" />
   </Target>
    
-  <Target Name="RunGruntFiles" DependsOnTargets="InstallNodePackages;BeforeRunGruntFiles;CoreRunGruntFiles" />
+  <Target Name="RunGruntFiles" DependsOnTargets="BeforeRunGruntFiles;CoreRunGruntFiles" />
   <Target Name="BeforeRunGruntFiles">    
     <ItemGroup>
       <GruntFiles Remove="@(GruntFiles)" />
@@ -496,7 +494,6 @@
     </ItemGroup>
   </Target>
   <Target Name="CoreRunGruntFiles" Inputs="%(GruntFiles.RootDir)%(GruntFiles.Directory)" Outputs="AlwaysExecute">
-
     <ConvertToAbsolutePath Paths="%(GruntFiles.RootDir)%(GruntFiles.Directory)">
       <Output TaskParameter="AbsolutePaths" PropertyName="GruntFileLocation" />
     </ConvertToAbsolutePath>  
@@ -515,9 +512,43 @@
     </ReadLinesFromFile>
     <Message Text="@(OutputLines->'%(Identity)', '%0a%0d')" Condition="'$(GruntErrorCode)' == '0'"/>
     <Error Text="@(OutputLines)" Condition="'$(GruntErrorCode)' != '0'" Code="$(GruntErrorCode)"/>
-      
   </Target>  
-    
+
+	<Target Name="RunGulpFiles" DependsOnTargets="BeforeRunGulpFiles;CoreRunGulpFiles" />
+	<Target Name="BeforeRunGulpFiles">
+		<ItemGroup>
+			<GulpFiles Remove="@(GulpFiles)" />
+			<GulpFiles Include="$(SourceDirectory)**\gulpfil*.js" />
+			<GulpFiles Include="$(HtmlSourceDirectory)**\gulpfil*.js" />
+			<GulpFiles Remove="$(SourceDirectory)**\node_modules\**\gulpfil*.js" />
+			<GulpFiles Remove="$(HtmlSourceDirectory)**\node_modules\**\gulpfil*.js" />
+		</ItemGroup>
+	</Target>
+	<Target Name="CoreRunGulpFiles" Inputs="%(GulpFiles.RootDir)%(GulpFiles.Directory)" Outputs="AlwaysExecute">
+		<ConvertToAbsolutePath Paths="%(GulpFiles.RootDir)%(GulpFiles.Directory)">
+			<Output TaskParameter="AbsolutePaths" PropertyName="GulpFileLocation" />
+		</ConvertToAbsolutePath>	
+
+		<PropertyGroup>
+			<GulpPath>gulp.cmd</GulpPath>
+		</PropertyGroup>
+
+		<!-- gulp build -->
+		<Delete Files="%(GulpFiles.RootDir)%(GulpFiles.Directory)gulp-output.txt"/>
+		<Exec Timeout="120000" ContinueOnError="True" Command="$(GulpPath) build --no-color 2&gt;&amp;1&gt;gulp-output.txt" WorkingDirectory="$(GulpFileLocation)">
+			<Output TaskParameter="ExitCode" PropertyName="GulpErrorCode"/>
+		</Exec>
+		<ReadLinesFromFile File="%(GulpFiles.RootDir)%(GulpFiles.Directory)gulp-output.txt">
+			 <Output TaskParameter="Lines" ItemName="OutputLines"/>
+		</ReadLinesFromFile>
+		<Message Text="GulpErrorCode: $(GulpErrorCode)"/>
+		<Message Text="@(OutputLines->'%(Identity)', '%0a%0d')" Condition="'$(GulpErrorCode)' == '0'"/>
+		<Error Text="@(OutputLines)" Condition="'$(GulpErrorCode)' != '0'" Code="$(GulpErrorCode)"/>
+	</Target>
+
+	<Target Name="RunGruntAndGulpFiles" DependsOnTargets="InstallNodePackages;RunGruntFiles;RunGulpFiles">
+	</Target>
+
   <Target Name="MinifyJavaScript" DependsOnTargets="BeforeMinifyJavaScript;CoreMinifyJavaScript" Condition="'$(SkipDefaultJavascriptMinification)' == 'False'"/>
   <Target Name="BeforeMinifyJavaScript">
     <!-- remove previously minified javascript -->
@@ -710,7 +741,6 @@
     <Exec WorkingDirectory="$(MSBuildProjectDirectory)" Command="$(PowershellPath) -ExecutionPolicy unrestricted -f $(ScriptsDirectory)\umbraco-jul-fix.ps1 -path $(ProjectReleaseDirectory) " />
 
   </Target>
-  
   
 
   <Target Name="ReleaseWebsites">
@@ -1626,8 +1656,11 @@
   </PropertyGroup>
 
     <!--Run cs and js. Cannot be done in one run yet: http://jira.codehaus.org/browse/SONARDOTNT-291 -->
-    <Exec Command="&quot;$(SonarRunnerPath)&quot; $(OptionalDebugArgument) -D sonar.projectKey=$(ProjectKey)-CS -D sonar.projectName=&quot;$(ProjectName)-CS&quot; -D sonar.projectVersion=$(BuildVersion) $(SonarConnectionParameters) -D sonar.exclusions=&quot;$(SonarGlobalCSharpExcludePattern)&quot; -D sonar.sources=&quot;$(SonarSource)&quot; -D project.home=&quot;$(SonarAbsoluteSolutionsToAnalyzeDirectory)&quot; -D sonar.projectBaseDir=&quot;$(SonarAbsoluteSolutionsToAnalyzeDirectory)&quot; -D sonar.language=cs -D sonar.dotnet.buildConfigurations=$(Configuration) -D sonar.dotnet.visualstudio.solution.file=&quot;%(SolutionsToAnalyze.Filename)%(SolutionsToAnalyze.Extension)&quot; -D csharp.sonar.projectBaseDir=%(SolutionsToAnalyze.RelativeDir) -D sonar.gallio.installDirectory=$(GallioPath) -D sonar.gallio.coverage.tool=OpenCover -D sonar.opencover.installDirectory=$(OpenCoverPath) -D sonar.dotnet.visualstudio.testProjectPattern=*$(UnitTestsProjectConventionName)*; -D sonar.gallio.coverage.excludes=&quot;$(ExcludeFromCoverage)&quot; -D sonar.fxcop.installDirectory=&quot;$(FxCopPath)&quot;" 
-          Condition=" $(SkipAnalysis) == 'False'" IgnoreExitCode="true" />
+    <Exec
+		Command="&quot;$(SonarRunnerPath)&quot; $(OptionalDebugArgument) -D sonar.projectKey=$(ProjectKey)-CS -D sonar.projectName=&quot;$(ProjectName)-CS&quot; -D sonar.projectVersion=$(BuildVersion) $(SonarConnectionParameters) -D sonar.exclusions=&quot;$(SonarGlobalCSharpExcludePattern)&quot; -D sonar.sources=&quot;$(SonarSource)&quot; -D project.home=&quot;$(SonarAbsoluteSolutionsToAnalyzeDirectory)&quot; -D sonar.projectBaseDir=&quot;$(SonarAbsoluteSolutionsToAnalyzeDirectory)&quot; -D sonar.language=cs -D sonar.dotnet.buildConfigurations=$(Configuration) -D sonar.dotnet.visualstudio.solution.file=&quot;%(SolutionsToAnalyze.Filename)%(SolutionsToAnalyze.Extension)&quot; -D csharp.sonar.projectBaseDir=%(SolutionsToAnalyze.RelativeDir) -D sonar.gallio.installDirectory=$(GallioPath) -D sonar.gallio.coverage.tool=OpenCover -D sonar.opencover.installDirectory=$(OpenCoverPath) -D sonar.dotnet.visualstudio.testProjectPattern=*$(UnitTestsProjectConventionName)*; -D sonar.gallio.coverage.excludes=&quot;$(ExcludeFromCoverage)&quot; -D sonar.fxcop.installDirectory=&quot;$(FxCopPath)&quot;" 
+		Condition=" $(SkipAnalysis) == 'False'"
+		IgnoreExitCode="true"
+	  />
     
   </Target>
 
