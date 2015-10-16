@@ -67,12 +67,12 @@
   <Target Name="InstallDeployDependencies" DependsOnTargets="PrepareGlobalProperties;DownloadToolsWithNuget;_PrepareVsTools">	
   </Target>  
   
-  <Target Name="InstallChocolatey" Condition="!Exists('$(ChocoPath)')">
+  <Target Name="InstallChocolatey" Condition="!Exists($([System.Environment]::ExpandEnvironmentVariables('$(ChocoPath)')))">
     <PropertyGroup>
       <ChocolateyInstallLine>@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))" &amp;&amp; SET PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin</ChocolateyInstallLine>
     </PropertyGroup>
     <!--- Install Chocolatey -->
-    <Exec Command="$(ChocolateyInstallLine)"  Condition=" '$(ChocolateyInstalled)' == 'False' " />		
+    <Exec Command="$(ChocolateyInstallLine)" />		
   </Target>
   <Target Name="FetchToolsWithChocolatey">
     <PropertyGroup>
