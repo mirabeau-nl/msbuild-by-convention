@@ -471,17 +471,11 @@
 	<!-- Install Gulp in global -->
 	<Exec Command="$(NpmPath) install gulp -g" WorkingDirectory="$(PackageJsonFileLocation)" />
 
-	<!-- Install flatten-packages in global -->
-	<Exec Command="$(NpmPath) install flatten-packages -g" WorkingDirectory="$(PackageJsonFileLocation)" />
-    
     <!-- install patch for win-spawn -->
     <Exec Command="$(NpmPath) install https://github.com/Ruzzie/win-spawn/archive/2.0.1.tar.gz" WorkingDirectory="$(PackageJsonFileLocation)"		/>
     
     <!-- npm install -->
     <Exec Command="$(NpmPath) install" WorkingDirectory="$(PackageJsonFileLocation)" />
-
-	<!-- flatten-packages -->
-	<Exec Command="flatten-packages" WorkingDirectory="$(PackageJsonFileLocation)" />
   </Target>
    
   <Target Name="RunGruntFiles" DependsOnTargets="BeforeRunGruntFiles;CoreRunGruntFiles" />
