@@ -66,6 +66,6 @@
 				ConsoleToMSBuild="true" >
 			<Output TaskParameter="ConsoleOutput" PropertyName="CommandOutput"/>
 		</Exec>
-		<Exec Command="$(ChocoPath) install -y %(OSPackageDependencies.PackageName)" Condition="!$(CommandOutput.Contains('%(OSPackageDependencies.CheckIfInstalledOuputCondition)')) "/>
+		<Exec Command="$(ChocoPath) install %(OSPackageDependencies.PackageName)" Condition="!$(CommandOutput.Contains('%(OSPackageDependencies.CheckIfInstalledOuputCondition)')) "/>
 	</Target>
 </Project>
