@@ -19,7 +19,7 @@
 			<PackageName>nodejs.install</PackageName>
 			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
 			<CheckIfInstalledCommand>node --version</CheckIfInstalledCommand>
-			<CheckIfInstalledOuputCondition>v0.12</CheckIfInstalledOuputCondition>
+			<CheckIfInstalledOuputCondition>v4.1</CheckIfInstalledOuputCondition>
 		</OSPackageDependencies>
 		<OSPackageDependencies Include="nothing">
 			<PackageName>java.jdk</PackageName>
