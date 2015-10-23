@@ -459,7 +459,8 @@
       <Output TaskParameter="AbsolutePaths" PropertyName="PackageJsonFileLocation" />
     </ConvertToAbsolutePath>
     <PropertyGroup>
-      <NpmPath>npm.cmd</NpmPath>			
+      <NpmPath>npm.cmd</NpmPath>
+	<NpmProductionFlag Condition="$(IgnoreNpmDevDependencies) == 'True'">--production</NpmProductionFlag>
     </PropertyGroup>	
 
       <!-- npm fix with this version http://blog.npmjs.org/post/78085451721/npms-self-signed-certificate-is-no-more -->
@@ -475,7 +476,7 @@
     <Exec Command="$(NpmPath) install https://github.com/Ruzzie/win-spawn/archive/2.0.1.tar.gz" WorkingDirectory="$(PackageJsonFileLocation)"		/>
     
     <!-- npm install -->
-    <Exec Command="$(NpmPath) install" WorkingDirectory="$(PackageJsonFileLocation)" />
+    <Exec Command="$(NpmPath) install $(NpmProductionFlag)" WorkingDirectory="$(PackageJsonFileLocation)" />
   </Target>
    
   <Target Name="RunGruntFiles" DependsOnTargets="BeforeRunGruntFiles;CoreRunGruntFiles" />
@@ -495,11 +496,12 @@
          
       <PropertyGroup>			
       <GruntPath>grunt.cmd</GruntPath>
+	<GruntProductionFlag Condition="$(IgnoreNpmDevDependencies) == 'True'">--production</GruntProductionFlag>
     </PropertyGroup>				
                           
     <!-- grunt build -->		
     <Delete Files="%(GruntFiles.RootDir)%(GruntFiles.Directory)grunt-output.txt"/>
-    <Exec Timeout="120000" ContinueOnError="True" Command="$(GruntPath) build --no-color 2&gt;&amp;1&gt;grunt-output.txt" WorkingDirectory="$(GruntFileLocation)">
+    <Exec Timeout="120000" ContinueOnError="True" Command="$(GruntPath) build $(NpmProductionFlag) --no-color 2&gt;&amp;1&gt;grunt-output.txt" WorkingDirectory="$(GruntFileLocation)">
       <Output TaskParameter="ExitCode" PropertyName="GruntErrorCode"/>
     </Exec>
     <ReadLinesFromFile File="%(GruntFiles.RootDir)%(GruntFiles.Directory)grunt-output.txt">
@@ -526,11 +528,12 @@
 
 		<PropertyGroup>
 			<GulpPath>gulp.cmd</GulpPath>
+			<GulpProductionFlag Condition="$(IgnoreNpmDevDependencies) == 'True'">--production</GulpProductionFlag>
 		</PropertyGroup>
 
 		<!-- gulp build -->
 		<Delete Files="%(GulpFiles.RootDir)%(GulpFiles.Directory)gulp-output.txt"/>
-		<Exec Timeout="120000" ContinueOnError="True" Command="$(GulpPath) build --no-color 2&gt;&amp;1&gt;gulp-output.txt" WorkingDirectory="$(GulpFileLocation)">
+		<Exec Timeout="120000" ContinueOnError="True" Command="$(GulpPath) $(GulpProductionFlag) build --no-color 2&gt;&amp;1&gt;gulp-output.txt" WorkingDirectory="$(GulpFileLocation)">
 			<Output TaskParameter="ExitCode" PropertyName="GulpErrorCode"/>
 		</Exec>
 		<ReadLinesFromFile File="%(GulpFiles.RootDir)%(GulpFiles.Directory)gulp-output.txt">
