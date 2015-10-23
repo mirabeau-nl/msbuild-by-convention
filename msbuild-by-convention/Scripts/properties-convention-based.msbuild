@@ -1,6 +1,6 @@
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
- 
+
   <PropertyGroup>
     <!-- common directories -->
     <BaseDirectory>..\..\</BaseDirectory>
@@ -29,8 +29,8 @@
     <!-- tool paths -->
     <NUnitToolPath>$(BuildToolsDirectory)NUnit.Runners.2.6.3\tools\</NUnitToolPath>
     <MSpecRunnerPath>$(BuildToolsDirectory)Machine.Specifications.0.6.0\tools\mspec-clr4.exe</MSpecRunnerPath>
-    <MSpecToJUnitXsltPath>$(BuildToolsDirectory)MSpecToJunitXslt\MSpecToJUnit.xslt</MSpecToJUnitXsltPath>    
-    
+    <MSpecToJUnitXsltPath>$(BuildToolsDirectory)MSpecToJunitXslt\MSpecToJUnit.xslt</MSpecToJUnitXsltPath>
+
     <!-- Resolve MsTest.exe -->
     <MSTestRunnerPath Condition=" '$(MSTestRunnerPath)' == '' ">$(VSInstallDir)Common7\IDE\MSTest.exe</MSTestRunnerPath>
     <MSTestRunnerPath Condition=" !Exists('$(MSTestRunnerPath)') ">$(MSBuildProgramFiles32)\Microsoft Visual Studio 12.0\Common7\IDE\MSTest.exe</MSTestRunnerPath>
@@ -39,7 +39,7 @@
     <MSTestRunnerPath Condition=" !Exists('$(MSTestRunnerPath)') ">MSTESTRUNNERPATH_UNDEFINED_AND_CANNOT_BE_RESOLVED_PLEASE_SET_IN_PROPERTIES\</MSTestRunnerPath>
 
     <LocalVSToolsPath>$(BuildToolsDirectory)VisualStudio.v11.0\</LocalVSToolsPath>
-    
+
     <!-- Resolve VSToolsPath-->
     <_VSToolsPath Condition="'$(_VSToolsPath)' == ''">$(LocalVSToolsPath)</_VSToolsPath>
     <_VSToolsPath Condition=" !Exists('$(_VSToolsPath)') ">$(VSInstallDir)</_VSToolsPath>
@@ -47,15 +47,15 @@
     <_VSToolsPath Condition=" !Exists('$(_VSToolsPath)') ">$(MSBuildProgramFiles32)\Microsoft Visual Studio 11.0\</_VSToolsPath>
     <_VSToolsPath Condition=" !Exists('$(_VSToolsPath)') ">$(MSBuildProgramFiles32)\Microsoft Visual Studio 10.0\</_VSToolsPath>
     <_VSToolsPath Condition=" !Exists('$(_VSToolsPath)') ">VSTOOLSPATH_UNDEFINED_AND_CANNOT_BE_RESOLVED_PLEASE_SET_IN_PROPERTIES\</_VSToolsPath>
-    
+
     <VSToolsPath>$(LocalVSToolsPath)</VSToolsPath>
-    
+
     <VisualStudioSqlServerDataToolsDir>$(_VSToolsPath)SSDT\</VisualStudioSqlServerDataToolsDir>
 
     <SqlServerRedistPath Condition="'$(SqlServerRedistPath)' == ''">$(BuildToolsDirectory)SqlServerRedistPath</SqlServerRedistPath>
     <SqlServerRedistPath Condition="!Exists('$(SqlServerRedistPath)')">$(MSBuildProgramFiles32)\Microsoft SQL Server\110\DAC\Bin</SqlServerRedistPath>
     <SqlServerRedistPath Condition="!Exists('$(SqlServerRedistPath)')">SQLSERVERREDISTPATH_UNDEFINED_AND_CANNOT_BE_RESOLVED_PLEASE_SET_IN_PROPERTIES</SqlServerRedistPath>
-            
+
     <MSBuildCommunityTasksDirectory>$(BuildToolsDirectory)MSBuildTasks.1.4.0.88\tools\</MSBuildCommunityTasksDirectory>
     <MSBuildCommunityTasksPath>$(MSBuildCommunityTasksDirectory)MSBuild.Community.Tasks.dll</MSBuildCommunityTasksPath>
     <YUICompressorPath>$(BuildToolsDirectory)YUICompressor.NET.MSBuild.2.4.0.0\lib\NET20\</YUICompressorPath>
@@ -78,10 +78,10 @@
     <WebPublishingTargetsSourceDirectory>$(BuildToolsDirectory)MSBuild.Microsoft.VisualStudio.Web.targets.12.0.4\tools\VSToolsPath\</WebPublishingTargetsSourceDirectory>
     <WebPublishingPath>$(VSToolsPath)Web\Microsoft.Web.Publishing.Tasks.dll</WebPublishingPath>
 
-            
+
     <OpenCoverPath>$(BuildToolsDirectory)OpenCover.4.5.3723\</OpenCoverPath>
     <OpenCoverMSBuildTasksPath>$(OpenCoverPath)MSBuild\</OpenCoverMSBuildTasksPath>
-    <ReportGeneratorPath>$(BuildToolsDirectory)ReportGenerator.1.9.1.0\</ReportGeneratorPath>		
+    <ReportGeneratorPath>$(BuildToolsDirectory)ReportGenerator.1.9.1.0\</ReportGeneratorPath>
     <BuildVersionFilePath>$(ScriptsDirectory)buildversion.txt</BuildVersionFilePath>
     <SonarRunnerPath>$(BuildToolsDirectory)SonarRunner.2.3\bin\sonar-runner.bat</SonarRunnerPath>
     <GallioPath>$(BuildToolsDirectory)GallioBundle.3.4.14.0\</GallioPath>
@@ -102,7 +102,7 @@
 
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <DeployEnvironment Condition=" '$(DeployEnvironment)' == '' "></DeployEnvironment>
-    <CompileTarget>Rebuild</CompileTarget>		
+    <CompileTarget>Rebuild</CompileTarget>
     <BuildParameters Condition=" '$(Configuration)' == 'Debug' ">Configuration=$(Configuration);DebugSymbols=true;DebugType=full;RunCodeAnalysis=false;Optimize=false;PreBuildEvent=;PostBuildEvent=</BuildParameters>
     <BuildParameters Condition=" '$(Configuration)' == 'Release' ">Configuration=$(Configuration);DebugSymbols=true;DebugType=pdbonly;RunCodeAnalysis=false;Optimize=true;PreBuildEvent=;PostBuildEvent=</BuildParameters>
     <SuitedForAllEnvironmentsDirectoryName>AllEnvironments</SuitedForAllEnvironmentsDirectoryName>
@@ -125,15 +125,17 @@
     <UseIncludedAzureSdkTargets Condition=" '$(UseIncludedAzureSdkTargets)' == '' ">False</UseIncludedAzureSdkTargets>
     <MinifyJavascript Condition=" '$(MinifyJavascript)' == '' ">True</MinifyJavascript>
     <MinifyCss Condition=" '$(MinifyCss)' == '' ">True</MinifyCss>
-    <MinifyRootDirectory Condition=" '$(MinifyInSourceDirectory)' == '' Or '$(MinifyInSourceDirectory)' == 'True' ">$(SourceDirectory)</MinifyRootDirectory>			
+    <MinifyRootDirectory Condition=" '$(MinifyInSourceDirectory)' == '' Or '$(MinifyInSourceDirectory)' == 'True' ">$(SourceDirectory)</MinifyRootDirectory>
     <MinifyRootDirectory Condition=" '$(MinifyRootDirectory)' == '' ">$(ReleaseTempDirectory)</MinifyRootDirectory>
     <!-- possible values: Both, NoVersion or WithVersion -->
-    <MinifyVersioningType Condition=" '$(MinifyVersioningType)' == '' ">Both</MinifyVersioningType> 
-		
-		<RemoveWebConfigFromReleaseZip Condition=" '$(RemoveWebConfigFromReleaseZip)' == '' ">False</RemoveWebConfigFromReleaseZip>
+    <MinifyVersioningType Condition=" '$(MinifyVersioningType)' == '' ">Both</MinifyVersioningType>
+
+    <RemoveWebConfigFromReleaseZip Condition=" '$(RemoveWebConfigFromReleaseZip)' == '' ">False</RemoveWebConfigFromReleaseZip>
+
+    <IgnoreNpmDevDependencies Condition=" '$(IgnoreNpmDevDependencies)' == '' ">False</IgnoreNpmDevDependencies>
 
     <!-- deploy properties -->
-    <ProjectToDeploy></ProjectToDeploy>	
+    <ProjectToDeploy></ProjectToDeploy>
     <DeployServer></DeployServer>
     <DeployUserDomain></DeployUserDomain>
     <DeployUsername></DeployUsername>
@@ -146,10 +148,10 @@
     <UseMsDepoyAzureTask Condition=" '$(UseMsDepoyAzureTask)' == '' ">False</UseMsDepoyAzureTask>
     <DeployDirectory></DeployDirectory>
     <DeployDatabaseType Condition=" '$(DeployDatabaseType)' == '' ">MsSql</DeployDatabaseType> <!-- [MsSql|Oracle|MySql] -->
-    
-		<EnableDoNotDeleteRule Condition=" '$(EnableDoNotDeleteRule)' == 'true' ">True</EnableDoNotDeleteRule>
-		<EnableDoNotDeleteRule Condition=" '$(EnableDoNotDeleteRule)' == 'false' ">False</EnableDoNotDeleteRule>
-		<EnableDoNotDeleteRule Condition=" '$(EnableDoNotDeleteRule)' == '' ">False</EnableDoNotDeleteRule>
+
+    <EnableDoNotDeleteRule Condition=" '$(EnableDoNotDeleteRule)' == 'true' ">True</EnableDoNotDeleteRule>
+    <EnableDoNotDeleteRule Condition=" '$(EnableDoNotDeleteRule)' == 'false' ">False</EnableDoNotDeleteRule>
+    <EnableDoNotDeleteRule Condition=" '$(EnableDoNotDeleteRule)' == '' ">False</EnableDoNotDeleteRule>
 
     <!-- runtime properties -->
     <ServiceUsername></ServiceUsername>
@@ -179,20 +181,20 @@
     <SonarDbPassword Condition=" '$(SonarDbPassword)' == '' ">$(bamboo_SonarDbPassword)</SonarDbPassword>
 
     <SonarProfile Condition=" '$(SonarProfile)' == '' "></SonarProfile>
-      
+
     <!-- The prefix for each solution and js webproject analysis project name to use in the ProjectName and ProjectKey, since sonar does not support 1 project for multiple solutions -->
     <SonarProjectPrefix></SonarProjectPrefix>
     <SonarProjectName></SonarProjectName>
     <SonarProjectKey></SonarProjectKey>
 
     <SonarBaseDirectory>$(BaseDirectory.Replace('\', '/'))</SonarBaseDirectory>
-    
+
     <SonarSourceFolder>$(SourceFolder.Replace('\', '/'))</SonarSourceFolder>
 
     <SonarGlobalJavascriptExcludePattern>**/Umbraco_Client/**/*.*,**/Umbraco/**/*.*,**/umbraco/**/*.*,**/umbraco_client/**/*.*,**/jquery*,**/libs/**/*.js,**/packages/**/*,**/Scripts/**/*.min.js</SonarGlobalJavascriptExcludePattern>
     <SonarGlobalCSharpExcludePattern></SonarGlobalCSharpExcludePattern>
     <SonarProjectJavascriptExcludePattern></SonarProjectJavascriptExcludePattern>
-    
+
     <FxCopPath>$(VS120COMNTOOLS)</FxCopPath>
     <FxCopPath Condition=" '$(FxCopPath)' == '' ">$(VS110COMNTOOLS)</FxCopPath>
     <FxCopPath>$(FxCopPath)..\..\Team Tools\Static Analysis Tools\FxCop\</FxCopPath>
@@ -223,15 +225,15 @@
     <WorkerProjectConventionName>Worker</WorkerProjectConventionName>
     <AzureProjectConventionName>Azure</AzureProjectConventionName>
     <FlashProjectDirectoryConventionName>Flash</FlashProjectDirectoryConventionName>
-    
+
     <GruntDirectoryConventionName>static</GruntDirectoryConventionName>
     <GruntBuildFileConventionName>Gruntfile.js</GruntBuildFileConventionName>
-    
+
     <JavascriptDirectoryConventionName>static\js</JavascriptDirectoryConventionName>
     <CssDirectoryConventionName>static\css</CssDirectoryConventionName>
     <SassDirectoryConventionName>static\scss</SassDirectoryConventionName>
     <SassRelativeOutputDirectoryConventionName>..\css\</SassRelativeOutputDirectoryConventionName>
-    
+
     <UnitTestsProjectConventionName>UnitTests</UnitTestsProjectConventionName>
     <IntegrationTestsProjectConventionName>IntegrationTests</IntegrationTestsProjectConventionName>
     <StaticHtmlProjectConventionName>Html</StaticHtmlProjectConventionName>
@@ -243,8 +245,8 @@
     <FilesToCopyForWebsiteReleasePattern></FilesToCopyForWebsiteReleasePattern>
     <FilesToRemoveForWebsiteReleasePattern></FilesToRemoveForWebsiteReleasePattern>
 
-		<CssFilesToCopyAfterCopySourcePattern></CssFilesToCopyAfterCopySourcePattern>
-		<CssFilesToCopyAfterCopyReleaseDestination></CssFilesToCopyAfterCopyReleaseDestination>
+    <CssFilesToCopyAfterCopySourcePattern></CssFilesToCopyAfterCopySourcePattern>
+    <CssFilesToCopyAfterCopyReleaseDestination></CssFilesToCopyAfterCopyReleaseDestination>
   </PropertyGroup>
 
   <ItemGroup>
@@ -274,9 +276,9 @@
       <VariableValue ParameterType="System.String" Output="false"></VariableValue>
     </ParameterGroup>
     <Task>
-      <Using Namespace="System" />			
+      <Using Namespace="System" />
       <Using Namespace="System.Diagnostics" />
-      <Code Type="Fragment" Language="cs"><![CDATA[          			 
+      <Code Type="Fragment" Language="cs"><![CDATA[
         Environment.SetEnvironmentVariable(VariableName,VariableValue);
       ]]>
       </Code>
