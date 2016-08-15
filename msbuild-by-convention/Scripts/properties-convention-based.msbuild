@@ -27,7 +27,7 @@
     <ChocoDirectory>%ALLUSERSPROFILE%\chocolatey\bin\</ChocoDirectory>
 
     <!-- tool paths -->
-    <NUnitToolPath>$(BuildToolsDirectory)NUnit.Runners.2.6.3\tools\</NUnitToolPath>
+    <NUnitToolPath>$(BuildToolsDirectory)NUnit.ConsoleRunner.3.4.1\tools\</NUnitToolPath>
     <MSpecRunnerPath>$(BuildToolsDirectory)Machine.Specifications.0.6.0\tools\mspec-clr4.exe</MSpecRunnerPath>
     <MSpecToJUnitXsltPath>$(BuildToolsDirectory)MSpecToJunitXslt\MSpecToJUnit.xslt</MSpecToJUnitXsltPath>
 
@@ -79,7 +79,7 @@
     <WebPublishingPath>$(VSToolsPath)Web\Microsoft.Web.Publishing.Tasks.dll</WebPublishingPath>
 
 
-    <OpenCoverPath>$(BuildToolsDirectory)OpenCover.4.5.3723\</OpenCoverPath>
+    <OpenCoverPath>$(BuildToolsDirectory)OpenCover.4.6.519\tools\</OpenCoverPath>
     <OpenCoverMSBuildTasksPath>$(OpenCoverPath)MSBuild\</OpenCoverMSBuildTasksPath>
     <ReportGeneratorPath>$(BuildToolsDirectory)ReportGenerator.1.9.1.0\</ReportGeneratorPath>
     <BuildVersionFilePath>$(ScriptsDirectory)buildversion.txt</BuildVersionFilePath>
