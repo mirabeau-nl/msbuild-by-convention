@@ -364,7 +364,7 @@
     <NUnit Assemblies="@(NunitTestAssemblies)" ToolPath="$(NUnitToolPath)" OutputXmlFile="$(TestResultsDirectory)NUnit.Results.%(NunitTestAssemblies.Filename).xml" DisableShadowCopy="true" Condition=" @(NunitTestAssemblies) != '' And $(IncludeCoverage) == 'False' " ContinueOnError="$(ContinueOnTestError)" />
 
     <!-- run tests with coverage (https://github.com/sawilde/opencover/wiki/Usage) -->
-    <Exec Command="$(OpenCoverPath)OpenCover.Console.exe -register:user -returntargetcode -target:$(NUnitToolPath)nunit-console.exe -targetargs:&quot;@(NunitTestAssemblies -> '%(FullPath)', ' ') /result=$(TestResultsDirectory)NUnit.Results.%(NunitTestAssemblies.Filename).xml /noshadow&quot; -filter:&quot;$(OpenCoverFilter)&quot; -output:$(CodeCoverageDirectory)NUnit.Coverage.%(NunitTestAssemblies.Filename).xml" Condition=" @(NunitTestAssemblies) != '' And $(IncludeCoverage) == 'True' " ContinueOnError="$(ContinueOnTestError)" />
+    <Exec Command="$(OpenCoverPath)OpenCover.Console.exe -register:user -returntargetcode -target:$(NUnitToolPath)nunit3-console.exe -targetargs:&quot;@(NunitTestAssemblies -> '%(FullPath)', ' ') /result=$(TestResultsDirectory)NUnit.Results.%(NunitTestAssemblies.Filename).xml &quot; -filter:&quot;$(OpenCoverFilter)&quot; -output:$(CodeCoverageDirectory)NUnit.Coverage.%(NunitTestAssemblies.Filename).xml" Condition=" @(NunitTestAssemblies) != '' And $(IncludeCoverage) == 'True' " ContinueOnError="$(ContinueOnTestError)" />
 
     <!-- filter out test assemblies if Machine.Specifications.dll is not referenced -->
     <ItemGroup>
