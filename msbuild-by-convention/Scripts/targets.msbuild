@@ -859,27 +859,31 @@
     <AspNetCompiler VirtualPath="/" PhysicalPath="$(ProjectSourceDirectory)" TargetPath="$(ProjectReleaseDirectory)" Updateable="$(CreateUpdateableAspxFilesInRelease)" Condition=" $(UseAspNetCompilerForRelease) == 'True' " />
 
     <!-- otherwise copy the files and dirs defined in FilesToCopyForReleasePattern or FilesToCopyForWebsiteReleasePattern (for websites) to the temp folder -->
+    <!-- exclude (user defined) files from copy to the temp folder -->
+    <MSBuild.ExtensionPack.Framework.TextString TaskAction="Split" String1="$(FilesToRemoveForWebsiteReleasePattern)" String2=";" Condition=" $(FilesToRemoveForWebsiteReleasePattern) != '' ">
+      <Output ItemName="FilesToRemoveForWebsiteRelease" TaskParameter="Strings" />
+    </MSBuild.ExtensionPack.Framework.TextString>
+    <!-- <Message Text="FilesToRemoveForWebsiteRelease: [$(ProjectSourceDirectory)%(FilesToRemoveForWebsiteRelease.Identity)]" /> -->
+    <ItemGroup>
+      <FilesToRemove Remove="@(FilesToRemove)" />
+      <FilesToRemove Include="$(ProjectSourceDirectory)%(FilesToRemoveForWebsiteRelease.Identity)" />
+    </ItemGroup>
+    <Message Text="Number of files in FilesToRemove: [@(FilesToRemove->Count())]" Condition=" $(FilesToRemoveForWebsiteReleasePattern) != '' " />
+
     <ItemGroup>
       <FilesToCopy Remove="@(FilesToCopy)" />
       <FilesToCopy Include="$(ProjectSourceDirectory)$(FilesToCopyForReleasePattern)" Condition=" $(FilesToCopyForReleasePattern) != '' " />
       <FilesToCopy Include="$(ProjectSourceDirectory)$(FilesToCopyForWebsiteReleasePattern)" Condition=" $(FilesToCopyForWebsiteReleasePattern) != '' And $(UseAspNetCompilerForRelease) != 'True' " />
+      <FilesToCopy Remove="@(FilesToRemove)" Condition=" $(FilesToRemoveForWebsiteReleasePattern) != '' " />
     </ItemGroup>
+    <Message Text="Number of files in FilesToCopy: [@(FilesToCopy->Count())]" />
+
     <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(ProjectReleaseDirectory)%(FilesToCopy.RecursiveDir)" Condition=" @(FilesToCopy) != '' " />	
 
     <Exec Command="COPY /Y $(ProjectSourceDirectory)$(CssFilesToCopyAfterCopySourcePattern) $(ProjectReleaseDirectory)$(CssFilesToCopyAfterCopyReleaseDestination)" Condition=" @(FilesToCopy) != '' AND $(CssFilesToCopyAfterCopySourcePattern) != '' AND $(CssFilesToCopyAfterCopyReleaseDestination) != ''">
       <Output TaskParameter="ExitCode" PropertyName="Exit"/>
     </Exec>
-	<Error Condition = " $(CssFilesToCopyAfterCopySourcePattern) != '' AND $(CssFilesToCopyAfterCopyReleaseDestination) != '' AND '$(Exit)' != '0'" Text="CssCopyAfterCopy failed." />
-
-    <!-- remove (user defined) files from release directory -->
-    <MSBuild.ExtensionPack.Framework.TextString TaskAction="Split" String1="$(FilesToRemoveForWebsiteReleasePattern)" String2=";" Condition=" $(FilesToRemoveForWebsiteReleasePattern) != '' ">
-      <Output ItemName="FilesToRemoveForWebsiteRelease" TaskParameter="Strings" />
-        </MSBuild.ExtensionPack.Framework.TextString>
-    <ItemGroup>
-      <FilesToRemove Remove="@(FilesToRemove)" />
-      <FilesToRemove Include="$(ProjectReleaseDirectory)%(FilesToRemoveForWebsiteRelease.Identity)" />
-    </ItemGroup>
-    <Delete Files="@(FilesToRemove)" />
+    <Error Condition = " $(CssFilesToCopyAfterCopySourcePattern) != '' AND $(CssFilesToCopyAfterCopyReleaseDestination) != '' AND '$(Exit)' != '0'" Text="CssCopyAfterCopy failed." />
 
     <!-- remove project files and web.config transform files from release directory -->
     <ItemGroup>
