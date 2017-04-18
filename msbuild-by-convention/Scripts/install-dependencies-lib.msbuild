@@ -4,53 +4,60 @@
 	<Import Project="$(CustomBuildScriptsDirectory)install-dependencies-lib-repository-specific.msbuild" Condition="exists('$(CustomBuildScriptsDirectory)install-dependencies-lib-repository-specific.msbuild')"/>
 	<ItemGroup>
 		<OSPackageDependencies Include="nothing">
-			<PackageName>Ruby</PackageName>
+			<PackageName>upgrade chocolatey</PackageName>
+			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
+			<CheckIfInstalledCommand>choco</CheckIfInstalledCommand>
+			<CheckIfInstalledOuputCondition>v0.9.9.5</CheckIfInstalledOuputCondition>
+		</OSPackageDependencies>
+		<OSPackageDependencies Include="nothing">
+			<PackageName>Ruby -y</PackageName>
 			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
 			<CheckIfInstalledCommand>ruby --version</CheckIfInstalledCommand>
 			<CheckIfInstalledOuputCondition>ruby 2.</CheckIfInstalledOuputCondition>
 		</OSPackageDependencies>
 		<OSPackageDependencies Include="nothing">
-			<PackageName>sass -source ruby</PackageName>
-			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
-			<CheckIfInstalledCommand>sass --version</CheckIfInstalledCommand>
-			<CheckIfInstalledOuputCondition>Sass 3</CheckIfInstalledOuputCondition>
-		</OSPackageDependencies>
-		<OSPackageDependencies Include="nothing">
-			<PackageName>nodejs.install</PackageName>
+			<PackageName>nodejs.install -y</PackageName>
 			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
 			<CheckIfInstalledCommand>node --version</CheckIfInstalledCommand>
 			<CheckIfInstalledOuputCondition>v4.1</CheckIfInstalledOuputCondition>
 		</OSPackageDependencies>
 		<OSPackageDependencies Include="nothing">
-			<PackageName>java.jdk</PackageName>
+			<PackageName>java.jdk -y</PackageName>
 			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
 			<CheckIfInstalledCommand>&quot;$(JAVA_HOME)\bin\java.exe&quot; -version</CheckIfInstalledCommand>
 			<CheckIfInstalledOuputCondition>1.</CheckIfInstalledOuputCondition>
 		</OSPackageDependencies>
 		<OSPackageDependencies Include="nothing">
-			<PackageName>maven</PackageName>
+			<PackageName>maven -y</PackageName>
 			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
 			<CheckIfInstalledCommand>mvn -version</CheckIfInstalledCommand>
 			<CheckIfInstalledOuputCondition>Maven</CheckIfInstalledOuputCondition>
 		</OSPackageDependencies>
 		<OSPackageDependencies Include="nothing">
-			<PackageName>optipng</PackageName>
+			<PackageName>optipng -y</PackageName>
 			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
 			<CheckIfInstalledCommand>optipng -v</CheckIfInstalledCommand>
 			<CheckIfInstalledOuputCondition>OptiPNG version</CheckIfInstalledOuputCondition>
 		</OSPackageDependencies>
 		<OSPackageDependencies Include="nothing">
-			<PackageName>SqlServerDataTools.2012</PackageName>
+			<PackageName>SqlServerDataTools.2012 -y</PackageName>
 			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
 			<CheckIfInstalledCommand>dir /b &quot;$(SqlServerRedistPath)&quot;</CheckIfInstalledCommand>
 			<CheckIfInstalledOuputCondition>SqlPackage.exe</CheckIfInstalledOuputCondition>
 		</OSPackageDependencies>
 		<OSPackageDependencies Include="nothing">
-			<PackageName>webdeploy</PackageName>
+			<PackageName>webdeploy -y</PackageName>
 			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
 			<CheckIfInstalledCommand>dir /b &quot;$(MsDeployDirectory)&quot;</CheckIfInstalledCommand>
 			<CheckIfInstalledOuputCondition>msdeploy.exe</CheckIfInstalledOuputCondition>
 		</OSPackageDependencies>
+		
+		<GemPackageDependencies Include="nothing">
+			<PackageName>sass</PackageName>
+			<CheckIfInstalledType>CommandOutputs</CheckIfInstalledType>
+			<CheckIfInstalledCommand>sass --version</CheckIfInstalledCommand>
+			<CheckIfInstalledOuputCondition>Sass 3</CheckIfInstalledOuputCondition>
+		</GemPackageDependencies>
 	</ItemGroup>
 
 	<PropertyGroup>
@@ -68,4 +75,17 @@
 		</Exec>
 		<Exec Command="$(ChocoPath) install %(OSPackageDependencies.PackageName)" Condition="!$(CommandOutput.Contains('%(OSPackageDependencies.CheckIfInstalledOuputCondition)')) "/>
 	</Target>
+	
+	<Target Name="ExecuteGemCommandAndCheckOuputOnCondition" 
+			Inputs="%(GemPackageDependencies.PackageName)" 
+			Outputs="%(GemPackageDependencies.PackageName)_data">
+		<Exec Command="%(GemPackageDependencies.CheckIfInstalledCommand)" 
+				Condition="'%(GemPackageDependencies.CheckIfInstalledType)' == 'CommandOutputs'"
+				ContinueOnError="true"
+				ConsoleToMSBuild="true" >
+			<Output TaskParameter="ConsoleOutput" PropertyName="CommandOutput"/>
+		</Exec>
+		<Exec Command="gem install %(GemPackageDependencies.PackageName) --source http://api.rubygems.org" Condition="!$(CommandOutput.Contains('%(GemPackageDependencies.CheckIfInstalledOuputCondition)')) "/>
+	</Target>
+	
 </Project>
